@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Particulate Matter Data</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="title-container">
+            <h1>Particulate Matter Data</h1>
+            <form action="set-location.html" method="get">
+                <input type="submit" value="Update Locations">
+            </form>
+            <button class="button-excel" id="exportButton">
+                <img src="excel.png" alt="Excel Icon" style="width: 20px; height: 20px; margin-right: 5px;"> Export to Excel
+            </button>
+        </div>
+        <table id="dataTable">
+            <tr>
+                <th>No.</th>
+                <th>Timestamp</th>
+                <th>Device ID</th>
+                <th>Location</th>
+                <th>PM2.5</th>
+                <th>PM2.5 Remarks</th>
+                <th>PM10</th>
+                <th>PM10 Remarks</th>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        const apiUrl = "https://phlhxvertmsqskgofbug.supabase.co/rest/v1/tblparticulate_matter";
+        const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBobGh4dmVydG1zcXNrZ29mYnVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTk5OTgyMjMsImV4cCI6MjAzNTU3NDIyM30.K-byE_UrblXBVqxyqvwSN_LVlOuyBi2b3XruZaAV6P8"; // Replace with your actual API key
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': apiKey,
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                populateTable(data);
+
+                document.getElementById('exportButton').addEventListener('click', () => {
+                    exportToExcel(data);
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+
+        function populateTable(data) {
+            const table = document.getElementById('dataTable');
+            
+            // Sort the data by timestamp in descending order
+            data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            data.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${formatTimestamp(row.timestamp)}</td>
+                    <td>${row.device_id}</td>
+                    <td>${row.location}</td>
+                    <td>${row.pm25}</td>
+                    <td>${row.pm25remarks}</td>
+                    <td>${row.pm10}</td>
+                    <td>${row.pm10remarks}</td>
+                `;
+                table.appendChild(tr);
+            });
+        }
+
+
+        function formatTimestamp(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleString(); // Adjust formatting as needed
+        }
+
+        function exportToExcel(data) {
+            const worksheet = XLSX.utils.json_to_sheet(data.map(item => {
+                const { timestamp, ...rest } = item; // Remove the timestamp field
+                return {
+                    ...rest,
+                    time_created: new Date(item.time_created).toLocaleString()
+                };
+            }), {
+                header: ["particulate_matter_id", "timestamp", "device_id", "location", "pm25", "pm25remarks", "pm10", "pm10remarks"]
+            });
+
+            XLSX.utils.sheet_add_aoa(worksheet, [["ID", "Date Uploaded", "Device ID", "Location", "PM2.5", "PM2.5 Remarks", "PM10", "PM10 Remarks"]], { origin: "A1" });
+
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Particulate Matter Data');
+
+            XLSX.writeFile(workbook, 'particulate_matter_data.xlsx');
+        }
+
+    </script>
+</body>
+</html>

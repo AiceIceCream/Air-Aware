@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air Aware</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <header class="container">
+        <h1><img src="./media/Logo1.png" alt="Logo" style="width: 36px;">ir Aware</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="#">About Us</a>
+            <a href="login.html">Sign in</a>
+        </nav>
+    </header>
+
+    <section class="hero container">
+        <div class="hero-text">
+            <h2>Monitor Air Quality Anywhere in Cagayan de Oro City</h2>
+            <p>Join us in our mission to monitor air quality.</p>
+            <div class="buttons">
+            <button class="btn"><span></span><p data-start="good luck!" data-text="Download Now!" data-title="Android App"></p></button>
+            </div>
+        </div>
+        <div class="logoimage">
+            <img src="./media/App1.png" alt="Logo">
+        </div>
+    </section>
+
+    <section class="categories container">
+        <h3><u>Pollutants</u></h3>
+        <div class="category-cards">
+            <div class="category-card">
+                <img src="./media/PM.png" alt="Particulate Matter 2.5&10" data-info="Tiny particles in the air that reduce air quality and can affect health.">
+                <p>Particulate Matter</p>
+            </div>
+            <div class="category-card">
+                <img src="./media/Temp.png" alt="Temperature" data-info="Measures the degree of warmth, important for environmental monitoring.">
+                <p>Temperature</p>
+            </div>
+            <div class="category-card">
+                <img src="./media/Humidity.png" alt="Humidity" data-info="Indicates the amount of moisture in the air, high humidity can affect comfort and health.">
+                <p>Humidity</p>
+            </div>
+            <div class="category-card">
+                <img src="./media/Oxygen.png" alt="Oxygen" data-info="Essential for human life, indicating air quality.">
+                <p>Oxygen</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal for displaying information -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle"></h2>
+            <p id="modalDescription"></p>
+            <button class="close-btn" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <section class="featured container">
+        <div class="featured-text">
+            <h3>Featured</h3>
+            <p>Our plants are 100% organic, we don't use pesticides or harmful chemicals. But please don't eat them.</p>
+            <a href="#">Shop all Favourites</a>
+        </div>
+        <div class="featured-items">
+            <div class="featured-item">
+                <img src="plant1.jpg" alt="Plant 1">
+                <p>Plant 1</p>
+                <p class="price">150€</p>
+            </div>
+            <div class="featured-item">
+                <img src="plant2.jpg" alt="Plant 2">
+                <p>Plant 2</p>
+                <p class="price">70€</p>
+            </div>
+            <div class="featured-item sold-out">
+                <img src="plant3.jpg" alt="Plant 3">
+                <p>Plant 3</p>
+                <p class="price">50€</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="blog container">
+        <div class="blog-article">
+            <img src="blog1.jpg" alt="How to water plants">
+            <p>How to water your freaking plants so they don't die after one week</p>
+        </div>
+        <div class="blog-article">
+            <img src="blog2.jpg" alt="How to repot a Monstera">
+            <p>How to repot a Monstera without killing it and foster its growth</p>
+        </div>
+    </section>
+
+    <section class="newsletter container">
+        <p>Get 15% off your next order, Subscribe to our Newsletter</p>
+        <input type="email" placeholder="Enter your email here">
+        <button>SUBSCRIBE</button>
+    </section>
+
+    <footer class="container">
+        <div>
+            <h4>Connect</h4>
+            <a href="#">Instagram</a>
+            <a href="#">Facebook</a>
+            <a href="#">Pinterest</a>
+            <a href="#">YouTube</a>
+        </div>
+        <div>
+            <h4>Resources</h4>
+            <a href="#">Return Policy</a>
+            <a href="#">Track An Order</a>
+            <a href="#">FAQs</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+        <div>
+            <h4>About</h4>
+            <a href="#">Our Story</a>
+            <a href="#">Careers</a>
+            <a href="#">Press</a>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript for handling the modal display
+        const images = document.querySelectorAll('.category-card img');
+        const modal = document.getElementById('infoModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDescription = document.getElementById('modalDescription');
+
+        // Function to open modal with specific info
+        images.forEach(image => {
+            image.addEventListener('click', () => {
+                const title = image.alt;
+                const description = image.getAttribute('data-info');
+                modalTitle.textContent = title;
+                modalDescription.textContent = description;
+                modal.style.display = 'flex'; // Show modal
+            });
+        });
+
+        // Function to close the modal
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+
+</body>
+</html>

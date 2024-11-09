@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Location</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Device Locations</h1>
+        <table id="device-table">
+            <tr>
+                <th>Device ID</th>
+                <th>Location</th>
+            </tr>
+            <!-- Rows will be added here by JavaScript -->
+        </table>
+    </div>
+    <div>
+        <form id="update-form">
+            <h2>Update Device Location</h2>
+            <label for="device_id">Select Device ID:</label>
+            <select name="device_id" id="device_id" required>
+                <!-- Options will be added here by JavaScript -->
+            </select><br>
+            <label for="location">Location:</label>
+            <input type="text" name="location" id="location" required><br>
+            <input type="submit" value="Update Location">
+        </form>
+    </div>
+
+    <script>
+        // Check for access
+        if (!localStorage.getItem('accessGranted')) {
+            window.location.href = 'set-location.html';
+        }
+
+        const apiUrl = "https://phlhxvertmsqskgofbug.supabase.co/rest/v1/tbldevice";
+        const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBobGh4dmVydG1zcXNrZ29mYnVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTk5OTgyMjMsImV4cCI6MjAzNTU3NDIyM30.K-byE_UrblXBVqxyqvwSN_LVlOuyBi2b3XruZaAV6P8";
+
+        async function fetchDevices() {
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': apiKey,
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                let data = await response.json();
+
+                data.sort((a, b) => a.device_id - b.device_id);
+
+                const table = document.getElementById('device-table');
+                const select = document.getElementById('device_id');
+                data.forEach(device => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${device.device_id}</td><td>${device.location}</td>`;
+                    table.appendChild(row);
+
+                    const option = document.createElement('option');
+                    option.value = device.device_id;
+                    option.textContent = device.device_id;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchDevices);
+
+        document.getElementById('update-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const deviceId = document.getElementById('device_id').value;
+            const location = document.getElementById('location').value;
+
+            try {
+                const response = await fetch(`${apiUrl}?device_id=eq.${deviceId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': apiKey,
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        location: location,
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Location updated successfully!');
+                    window.location.reload();
+                } else {
+                    console.error('Error updating record:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error updating record:', error);
+            }
+        });
+    </script>
+</body>
+</html>

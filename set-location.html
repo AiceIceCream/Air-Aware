@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Please Insert PIN</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <form id="pinForm">
+        <h1>Enter PIN</h1>
+        <label for="pin">PIN:</label>
+        <input type="password" name="pin" id="pin" maxlength="4" required />
+        <button type="submit">Submit</button>
+        <p id="errorMessage" style="display:none;">Incorrect PIN. Try again.</p>
+    </form>
+
+    <script>
+        document.getElementById('pinForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const enteredPIN = document.getElementById('pin').value;
+            const correctPIN = '1234'; // Replace with your actual PIN
+
+            if (enteredPIN === correctPIN) {
+                localStorage.setItem('accessGranted', 'true');
+                window.location.href = 'locations.html';
+            } else {
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
