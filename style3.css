@@ -29,7 +29,7 @@ body {
     content: "";
     width: 500px;
     height: 500px;
-    background-color: rgb(209, 193, 255);
+    background-color: rgb(115, 198, 236);
     transform: rotate(45deg);
     left: -250px;
     bottom: 30px;
@@ -72,7 +72,7 @@ body {
 
 .inputField:focus {
     outline: none;
-    border-bottom: 2px solid rgb(199, 114, 255);
+    border-bottom: 2px solid rgb(62, 154, 216);
 }
 
 .inputField::placeholder {
@@ -83,22 +83,53 @@ body {
 
 /* Adjust button size and hover effect */
 #button {
-    z-index: 2;
-    width: 100%;
-    border: none;
-    background-color: rgb(162, 104, 255);
-    height: 45px;
-    color: white;
-    font-size: 1em;
-    font-weight: 500;
-    letter-spacing: 1px;
-    margin: 20px 0;
-    cursor: pointer;
-    border-radius: 5px;
+  z-index: 2;
+  width: 100%;
+  border: none;
+  background-color: rgb(53, 142, 201);
+  height: 45px;
+  color: white;
+  font-size: 1em;
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin: 20px 0;
+  cursor: pointer;
+  border-radius: 5px;
+  position: relative;
+  display: flex;         /* Make button a flex container */
+  align-items: center;   /* Center content vertically */
+  justify-content: center; /* Center content horizontally */
 }
 
 #button:hover {
-    background-color: rgb(126, 84, 255);
+  background-color: rgb(10, 128, 197);
+}
+
+.button-text {
+  transition: opacity 0.3s;
+}
+
+.loading-spinner {
+  display: none;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 3px solid transparent;
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-active .button-text {
+  opacity: 0; /* Hide the text when loading */
+}
+
+.loading-active .loading-spinner {
+  display: inline-block;
 }
 
 /* Adjust forgot link styling */
@@ -112,124 +143,5 @@ body {
     border-radius: 20px;
 }
 
-/* Preloader */
-
-#preloader{
-    background: no-repeat center center;
-    background-size: 30%;
-    height: 100vh;
-    width: 100vw;
-    position: fixed;
-    z-index: 100;
-}
-
-
-.container {
-    width: 250px;
-    height: 250px;
-    padding: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .cloud {
-    width: 250px;
-  }
-  
-  .front {
-    padding-top: 45px;
-    margin-left: 25px;
-    display: inline;
-    position: absolute;
-    z-index: 11;
-    animation: clouds 8s infinite;
-    animation-timing-function: ease-in-out;
-  }
-  
-  .back {
-    margin-top: -30px;
-    margin-left: 150px;
-    z-index: 12;
-    animation: clouds 12s infinite;
-    animation-timing-function: ease-in-out;
-  }
-  
-  .right-front {
-    width: 45px;
-    height: 45px;
-    border-radius: 50% 50% 50% 0%;
-    background-color: #4c9beb;
-    display: inline-block;
-    margin-left: -25px;
-    z-index: 5;
-  }
-  
-  .left-front {
-    width: 65px;
-    height: 65px;
-    border-radius: 50% 50% 0% 50%;
-    background-color: #4c9beb;
-    display: inline-block;
-    z-index: 5;
-  }
-  
-  .right-back {
-    width: 50px;
-    height: 50px;
-    border-radius: 50% 50% 50% 0%;
-    background-color: #4c9beb;
-    display: inline-block;
-    margin-left: -20px;
-    z-index: 5;
-  }
-  
-  .left-back {
-    width: 30px;
-    height: 30px;
-    border-radius: 50% 50% 0% 50%;
-    background-color: #4c9beb;
-    display: inline-block;
-    z-index: 5;
-  }
-  
-  .sun {
-    width: 120px;
-    height: 120px;
-    background: -webkit-linear-gradient(to right, #fcbb04, #fffc00);
-    background: linear-gradient(to right, #fcbb04, #fffc00);
-    border-radius: 60px;
-    display: inline;
-    position: absolute;
-  }
-  
-  .sunshine {
-    animation: sunshines 2s infinite;
-  }
-  
-  @keyframes sunshines {
-    0% {
-      transform: scale(1);
-      opacity: 0.6;
-    }
-  
-    100% {
-      transform: scale(1.4);
-      opacity: 0;
-    }
-  }
-  
-  @keyframes clouds {
-    0% {
-      transform: translateX(15px);
-    }
-  
-    50% {
-      transform: translateX(0px);
-    }
-  
-    100% {
-      transform: translateX(15px);
-    }
-  }
-  
+/*     $apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtvaGpjcmRpcm12YW1zamNlZmV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjczMzA2MTMsImV4cCI6MjA0MjkwNjYxM30.nuysQR2UPTch2YbRDPYWAgp14Ofi73gL72T9j6JIDM4";
+ */

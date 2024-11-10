@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Particulate Matter Data</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style2.css">
 </head>
 <body>
     <div class="container">
@@ -28,13 +28,19 @@
                 <th>PM2.5 Remarks</th>
                 <th>PM10</th>
                 <th>PM10 Remarks</th>
+                <th>Humidity</th>
+                <th>Humidity Remarks</th>
+                <th>Temperature</th>
+                <th>Temperature Remarks</th>
+                <th>Oxygen</th>
+                <th>Oxygen Remarks</th>
             </tr>
         </table>
     </div>
 
     <script>
-        const apiUrl = "https://phlhxvertmsqskgofbug.supabase.co/rest/v1/tblparticulate_matter";
-        const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBobGh4dmVydG1zcXNrZ29mYnVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTk5OTgyMjMsImV4cCI6MjAzNTU3NDIyM30.K-byE_UrblXBVqxyqvwSN_LVlOuyBi2b3XruZaAV6P8"; // Replace with your actual API key
+        const apiUrl = "https://kohjcrdirmvamsjcefew.supabase.co";
+        const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtvaGpjcmRpcm12YW1zamNlZmV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjczMzA2MTMsImV4cCI6MjA0MjkwNjYxM30.nuysQR2UPTch2YbRDPYWAgp14Ofi73gL72T9j6JIDM4"; // Replace with your actual API key
 
         document.addEventListener('DOMContentLoaded', async () => {
             try {
@@ -65,20 +71,25 @@
         function populateTable(data) {
             const table = document.getElementById('dataTable');
             
-            // Sort the data by timestamp in descending order
             data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
             
             data.forEach((row, index) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${index + 1}</td>
-                    <td>${formatTimestamp(row.timestamp)}</td>
+                    <td>${formatTimestamp(row.date)}</td>
                     <td>${row.device_id}</td>
-                    <td>${row.location}</td>
+                    <td>${row.locationId}</td>
                     <td>${row.pm25}</td>
-                    <td>${row.pm25remarks}</td>
+                    <td>${row.pm25Remarks}</td>
                     <td>${row.pm10}</td>
-                    <td>${row.pm10remarks}</td>
+                    <td>${row.pm10Remarks}</td>
+                    <td>${row.humidity}</td>
+                    <td>${row.humidityRemarks}</td>
+                    <td>${row.temperature}</td>
+                    <td>${row.temperatureRemarks}</td>
+                    <td>${row.oxygen}</td>
+                    <td>${row.oxygenRemarks}</td>
                 `;
                 table.appendChild(tr);
             });
