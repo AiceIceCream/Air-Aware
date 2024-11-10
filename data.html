@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <div class="title-container">
-            <h1>Particulate Matter Data</h1>
+            <h1 style="font-family: 'Courier New', Courier, monospace;">Overall Data</h1>
             <form action="set-location.html" method="get">
                 <input type="submit" value="Update Locations">
             </form>
@@ -39,7 +39,7 @@
     </div>
 
     <script>
-        const apiUrl = "https://kohjcrdirmvamsjcefew.supabase.co";
+        const apiUrl = "https://kohjcrdirmvamsjcefew.supabase.co/rest/v1/sensors";
         const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtvaGpjcmRpcm12YW1zamNlZmV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjczMzA2MTMsImV4cCI6MjA0MjkwNjYxM30.nuysQR2UPTch2YbRDPYWAgp14Ofi73gL72T9j6JIDM4"; // Replace with your actual API key
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -70,9 +70,10 @@
 
         function populateTable(data) {
             const table = document.getElementById('dataTable');
-            
-            data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-            
+
+            // Sort data by timestamp in descending order (newest first)
+            data.sort((a, b) => new Date(b.date) - new Date(a.date));
+
             data.forEach((row, index) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -96,29 +97,80 @@
         }
 
 
+
         function formatTimestamp(timestamp) {
             const date = new Date(timestamp);
             return date.toLocaleString(); // Adjust formatting as needed
         }
 
         function exportToExcel(data) {
-            const worksheet = XLSX.utils.json_to_sheet(data.map(item => {
-                const { timestamp, ...rest } = item; // Remove the timestamp field
-                return {
-                    ...rest,
-                    time_created: new Date(item.time_created).toLocaleString()
-                };
-            }), {
-                header: ["particulate_matter_id", "timestamp", "device_id", "location", "pm25", "pm25remarks", "pm10", "pm10remarks"]
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const todayData = data.filter(item => {
+                const itemDate = new Date(item.date);
+                itemDate.setHours(0, 0, 0, 0);
+                return itemDate.getTime() === today.getTime();
             });
 
-            XLSX.utils.sheet_add_aoa(worksheet, [["ID", "Date Uploaded", "Device ID", "Location", "PM2.5", "PM2.5 Remarks", "PM10", "PM10 Remarks"]], { origin: "A1" });
+            // Map filtered data to match the specified column order
+            const worksheet = XLSX.utils.json_to_sheet(todayData.map(item => ({
+                id: item.id,
+                locationId: item.locationId,
+                pm25: item.pm25,
+                pm10: item.pm10,
+                humidity: item.humidity,
+                temperature: item.temperature,
+                oxygen: item.oxygen,
+                pm25Remarks: item.pm25Remarks,
+                pm10Remarks: item.pm10Remarks,
+                humidityRemarks: item.humidityRemarks,
+                temperatureRemarks: item.temperatureRemarks,
+                oxygenRemarks: item.oxygenRemarks,
+                date: new Date(item.date).toLocaleString()
+            })), {
+                header: [
+                    "id", 
+                    "locationId", 
+                    "pm25", 
+                    "pm10", 
+                    "humidity", 
+                    "temperature", 
+                    "oxygen", 
+                    "pm25Remarks", 
+                    "pm10Remarks", 
+                    "humidityRemarks", 
+                    "temperatureRemarks", 
+                    "oxygenRemarks", 
+                    "date"
+                ]
+            });
+
+            // Add the header row with readable column names
+            XLSX.utils.sheet_add_aoa(worksheet, [
+                [
+                    "ID", 
+                    "Location ID", 
+                    "PM2.5", 
+                    "PM10", 
+                    "Humidity", 
+                    "Temperature", 
+                    "Oxygen", 
+                    "PM2.5 Remarks", 
+                    "PM10 Remarks", 
+                    "Humidity Remarks", 
+                    "Temperature Remarks", 
+                    "Oxygen Remarks", 
+                    "Date"
+                ]
+            ], { origin: "A1" });
 
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, 'Particulate Matter Data');
 
-            XLSX.writeFile(workbook, 'particulate_matter_data.xlsx');
+            XLSX.writeFile(workbook, 'AirQuality_Today.xlsx');
         }
+
 
     </script>
 </body>

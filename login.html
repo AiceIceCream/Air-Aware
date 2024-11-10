@@ -39,7 +39,7 @@
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         document.getElementById('button').addEventListener('click', async (event) => {
-            event.preventDefault();
+            // event.preventDefault();
             const button = event.target;
             
             button.classList.add('loading-active');

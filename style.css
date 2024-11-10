@@ -327,68 +327,6 @@ header nav a:hover {
     border-radius: 5px;
 }
 
-/* Featured Section */
-.featured {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-top: 60px;
-}
-
-.featured .featured-text {
-    max-width: 300px;
-}
-
-.featured .featured-text h3 {
-    font-size: 2rem;
-    margin-bottom: 10px;
-}
-
-.featured .featured-text p {
-    font-size: 1rem;
-    color: #666;
-    margin-bottom: 10px;
-}
-
-.featured .featured-items {
-    display: flex;
-    gap: 20px;
-}
-
-.featured-item {
-    text-align: center;
-}
-
-.featured-item img {
-    width: 150px;
-    border-radius: 10px;
-}
-
-.featured-item p {
-    margin-top: 10px;
-    font-size: 1rem;
-}
-
-.featured-item .price {
-    font-weight: bold;
-}
-
-.sold-out {
-    position: relative;
-    display: inline-block;
-}
-
-.sold-out::after {
-    content: "Sold Out";
-    position: absolute;
-    top: 0;
-    right: 0;
-    background-color: black;
-    color: white;
-    padding: 2px 5px;
-    font-size: 0.8rem;
-}
-
 /* Blog Section */
 .blog {
     display: flex;
@@ -397,7 +335,7 @@ header nav a:hover {
 }
 
 .blog-article {
-    width: 48%;
+    width: 98%;
 }
 
 .blog-article img {
@@ -409,6 +347,7 @@ header nav a:hover {
     font-size: 1rem;
     color: #666;
     margin-top: 10px;
+    text-align: justify;
 }
 
 /* Newsletter Section */
@@ -435,27 +374,35 @@ header nav a:hover {
 
 /* Footer */
 footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 60px;
-    padding: 40px 0;
-    border-top: 1px solid #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 60px;
+  padding: 40px 0;
+  border-top: 1px solid #eee;
+  width: 100%;
 }
 
-footer div {
-    width: 30%;
+.footer-connect {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-footer a {
-    display: block;
-    color: #333;
-    text-decoration: none;
-    margin-bottom: 10px;
+.social-icons {
+  display: flex;
+  gap: 50px;
+  margin-top: 10px;
 }
 
-footer .copyright {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 0.9rem;
-    color: #666;
+.social-icons a {
+  color: #333;
+  font-size: 1.5rem; /* Adjust icon size */
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
+
+.social-icons a:hover {
+  color: #666;
+}
+

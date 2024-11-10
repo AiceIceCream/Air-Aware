@@ -1,28 +1,31 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
+    background-color: #a1c7ff;
     margin: 0;
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
+    overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
 .container {
-    max-width: 800px;
-    width: 100%;
+    max-width: 100%; /* Make sure container doesn't exceed screen width */
+    width: 90%;
     margin: 20px;
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-x: auto; /* Enable horizontal scrolling for wide tables */
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
+    table-layout: auto; /* Let the table adjust to the container width */
 }
 
 table, th, td {
@@ -32,11 +35,15 @@ table, th, td {
 th, td {
     padding: 10px;
     text-align: left;
+    font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
 }
 
 th {
-    background-color: #4caf50;
+    background-color: #246f8d;
     color: #fff;
+    text-align: center;
+    font-size: 12px;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 form {
@@ -48,22 +55,20 @@ form {
 }
 
 button {
-    background-color: #4caf50;
+    background-color: #1d62a3;
     color: #fff;
-    padding: 20px;
+    padding: 10px;
     border-radius: 8px;
     text-align: center;
-    margin-top: 20px;
     cursor: pointer;
 }
 
 .button-excel {
     background-color: #fff;
-    color: #4caf50;
+    color: #207da1;
     padding: 10px;
     border-radius: 8px;
-    text-align: center;
-    margin-top: 20px;
+    margin-top: 10px;
     cursor: pointer;
 }
 
@@ -86,7 +91,7 @@ input {
 }
 
 input[type="submit"] {
-    background-color: #4caf50;
+    background-color: #298a97;
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -96,9 +101,9 @@ input[type="submit"] {
 }
 
 select {
-    font-size: 1.2em; /* Increase font size */
-    padding: 5px; /* Add padding */
-    margin-bottom: 10px; /* Add space below select */
+    font-size: 1.2em;
+    padding: 5px;
+    margin-bottom: 10px;
 }
 
 .title-container {
@@ -106,14 +111,17 @@ select {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    flex-wrap: wrap; /* Make items stack on small screens */
 }
 
 .title-container h1 {
     margin: 0;
+    flex-grow: 1;
 }
 
 .title-container form input[type="submit"] {
     width: auto;
     margin-left: 20px;
     padding: 10px 20px;
+    white-space: nowrap; /* Prevent text wrapping */
 }

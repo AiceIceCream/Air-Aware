@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Air Aware</title>
     <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <header class="container">
@@ -60,79 +61,33 @@
         </div>
     </div>
 
-    <section class="featured container">
-        <div class="featured-text">
-            <h3>Featured</h3>
-            <p>Our plants are 100% organic, we don't use pesticides or harmful chemicals. But please don't eat them.</p>
-            <a href="#">Shop all Favourites</a>
-        </div>
-        <div class="featured-items">
-            <div class="featured-item">
-                <img src="plant1.jpg" alt="Plant 1">
-                <p>Plant 1</p>
-                <p class="price">150€</p>
-            </div>
-            <div class="featured-item">
-                <img src="plant2.jpg" alt="Plant 2">
-                <p>Plant 2</p>
-                <p class="price">70€</p>
-            </div>
-            <div class="featured-item sold-out">
-                <img src="plant3.jpg" alt="Plant 3">
-                <p>Plant 3</p>
-                <p class="price">50€</p>
-            </div>
-        </div>
-    </section>
-
     <section class="blog container">
-        <div class="blog-article">
-            <img src="blog1.jpg" alt="How to water plants">
-            <p>How to water your freaking plants so they don't die after one week</p>
+        <div class="blog-article">  
+            <h4>Why Air Quality Matters: A Closer Look at Cagayan de Oro City</h4>
+            <p>Air quality is essential for our health and the environment. Poor air quality affects respiratory health, contributes to diseases, and impacts local ecosystems. In urban areas, pollutants from traffic, industry, and other sources make air quality an important concern.</p>
+            <p>In Cagayan de Oro City, rapid urbanization has increased emissions, making it critical to monitor pollution levels. By staying informed and adopting eco-friendly practices, we can help improve the city’s air quality for a healthier community.</p>
+            <a href="#">Read More</a>
         </div>
-        <div class="blog-article">
-            <img src="blog2.jpg" alt="How to repot a Monstera">
-            <p>How to repot a Monstera without killing it and foster its growth</p>
-        </div>
-    </section>
-
-    <section class="newsletter container">
-        <p>Get 15% off your next order, Subscribe to our Newsletter</p>
-        <input type="email" placeholder="Enter your email here">
-        <button>SUBSCRIBE</button>
     </section>
 
     <footer class="container">
-        <div>
+        <div class="footer-connect">
             <h4>Connect</h4>
-            <a href="#">Instagram</a>
-            <a href="#">Facebook</a>
-            <a href="#">Pinterest</a>
-            <a href="#">YouTube</a>
-        </div>
-        <div>
-            <h4>Resources</h4>
-            <a href="#">Return Policy</a>
-            <a href="#">Track An Order</a>
-            <a href="#">FAQs</a>
-            <a href="#">Privacy Policy</a>
-        </div>
-        <div>
-            <h4>About</h4>
-            <a href="#">Our Story</a>
-            <a href="#">Careers</a>
-            <a href="#">Press</a>
+            <div class="social-icons">
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
         </div>
     </footer>
 
     <script>
-        // JavaScript for handling the modal display
         const images = document.querySelectorAll('.category-card img');
         const modal = document.getElementById('infoModal');
         const modalTitle = document.getElementById('modalTitle');
         const modalDescription = document.getElementById('modalDescription');
 
-        // Function to open modal with specific info
         images.forEach(image => {
             image.addEventListener('click', () => {
                 const title = image.alt;
