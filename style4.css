@@ -1,0 +1,102 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #67adfd;
+    font-family: Arial, sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+    z-index: 1; /* Ensures QR code is above floating circles */
+  }
+  
+  .qr-code img {
+    width: 200px;
+    height: 200px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  .qr-link {
+    margin-top: 15px;
+    font-size: 1.1em;
+    font-weight: 500;
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .qr-link:hover {
+    color: #2c81c9;
+  }
+  
+  .qr-link::before {
+    content: "🔗 ";
+    font-size: 1.1em;
+  }
+  
+  /* Floating circles animation */
+  .floating-circle {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.4);
+    animation: float 15s ease-in-out infinite;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translateY(0) translateX(0);
+    }
+    25% {
+      transform: translateY(-200px) translateX(100px);
+    }
+    50% {
+      transform: translateY(200px) translateX(200px);
+    }
+    75% {
+      transform: translateY(-150px) translateX(-150px);
+    }
+    100% {
+      transform: translateY(0) translateX(0);
+    }
+  }
+  
+  body::before,
+  body::after,
+  body .floating-circle:nth-child(1),
+  body .floating-circle:nth-child(2),
+  body .floating-circle:nth-child(3),
+  body .floating-circle:nth-child(4),
+  body .floating-circle:nth-child(5)
+  body .floating-circle:nth-child(6) {
+    content: '';
+    position: absolute;
+    top: random(20%, 100%);
+    left: random(10%, 100%);
+    width: random(20px, 50px);
+    height: random(30px, 40px);
+    background-color: rgba(128, 163, 238, 0.4);
+    border-radius: 50%;
+    animation: float 15s ease-in-out infinite;
+  }
+  

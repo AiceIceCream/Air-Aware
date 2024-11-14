@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Display</title>
+  <link rel="stylesheet" href="style4.css">
+</head>
+<body>
+  <div class="qr-container">
+    <div class="qr-code">
+      <img src="./media/QR.png" alt="QR Code">
+    </div>
+    <a href="https://expo.dev/accounts/aiceicecream/projects/AirAware/builds/a61db5f6-37f0-483b-8757-e0918ee1ca0e" class="qr-link" target="_blank">Click Me!</a>
+  </div>
+  
+  <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const numCircles = 10;
+        for (let i = 0; i < numCircles; i++) {
+        const circle = document.createElement("div");
+        circle.classList.add("floating-circle");
+        circle.style.width = `${Math.random() * 200 + 150}px`;
+        circle.style.height = circle.style.width;
+        circle.style.top = `${Math.random() * 100}%`;  // Random position
+        circle.style.left = `${Math.random() * 100}%`;
+        document.body.appendChild(circle);
+    }
+  });
+  </script>
+</body>
+</html>
