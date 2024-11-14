@@ -9,11 +9,12 @@
 </head>
 <body>
     <div class="container">
-        <div class="title-container">
+        <div class="title-container" style="align-items: center;">
             <h1 style="font-family: 'Courier New', Courier, monospace;">Overall Data</h1>
             <form action="set-location.html" method="get">
-                <input type="submit" value="Update Locations">
+                <input style="margin-top: 10px;" type="submit" value="Update Locations">
             </form>
+            <input style="width: 10%; margin-top: 30px; height: 45px; border-radius: 10px;" type="date" id="datePicker" />
             <button class="button-excel" id="exportButton">
                 <img src="excel.png" alt="Excel Icon" style="width: 20px; height: 20px; margin-right: 5px;"> Export to Excel
             </button>
@@ -55,41 +56,41 @@
         let data = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'GET',
-                    headers: {
-                        'apikey': apiKey,
-                        'Authorization': `Bearer ${apiKey}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'GET',
+                headers: {
+                    'apikey': apiKey,
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                }
+            });
 
-                if (!response.ok) throw new Error(`Error: ${response.statusText}`);
-                
-                data = await response.json();
-                data.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by timestamp
-                renderPage();
+            if (!response.ok) throw new Error(`Error: ${response.statusText}`);
 
-                document.getElementById('exportButton').addEventListener('click', () => exportToExcel(data));
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        });
+            data = await response.json();
+            data.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by timestamp
+            renderPage();
+
+            document.getElementById('exportButton').addEventListener('click', () => {
+                const selectedDate = document.getElementById('datePicker').value;
+                exportToExcel(data, selectedDate);
+            });
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    });
 
         function renderPage() {
             const table = document.getElementById('dataTable');
             const pageDisplay = document.getElementById('pageDisplay');
 
-            // Clear current table rows (except headers)
             table.querySelectorAll("tr:not(:first-child)").forEach(row => row.remove());
 
-            // Calculate starting and ending index for the current page
             const start = (currentPage - 1) * rowsPerPage;
             const end = start + rowsPerPage;
             const pageData = data.slice(start, end);
 
-            // Populate table with rows for the current page
             pageData.forEach((row, index) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -133,60 +134,64 @@
             return date.toLocaleString();
         }
 
-        function exportToExcel(data) {
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
+        function exportToExcel(data, selectedDate) {
+        const selectedDateObj = selectedDate ? new Date(selectedDate) : new Date();
+        selectedDateObj.setHours(0, 0, 0, 0);
 
-            const todayData = data.filter(item => {
-                const itemDate = new Date(item.date);
-                itemDate.setHours(0, 0, 0, 0);
-                return itemDate.getTime() === today.getTime();
-            });
+        const filteredData = data.filter(item => {
+            const itemDate = new Date(item.date);
+            itemDate.setHours(0, 0, 0, 0);
+            return itemDate.getTime() === selectedDateObj.getTime();
+        });
 
-            const remarkCounts = { "Good": 0, "Poor": 0, "Unhealthy": 0, "Very Unhealthy": 0 };
-
-            todayData.forEach(item => {
-                remarkCounts[item.pm25Remarks] = (remarkCounts[item.pm25Remarks] || 0) + 1;
-                remarkCounts[item.pm10Remarks] = (remarkCounts[item.pm10Remarks] || 0) + 1;
-                remarkCounts[item.humidityRemarks] = (remarkCounts[item.humidityRemarks] || 0) + 1;
-                remarkCounts[item.temperatureRemarks] = (remarkCounts[item.temperatureRemarks] || 0) + 1;
-                remarkCounts[item.oxygenRemarks] = (remarkCounts[item.oxygenRemarks] || 0) + 1;
-            });
-
-            const majorityRemark = Object.keys(remarkCounts).reduce((a, b) => remarkCounts[a] > remarkCounts[b] ? a : b);
-
-            const worksheet = XLSX.utils.json_to_sheet(todayData.map(item => ({
-                id: item.id,
-                locationId: item.locationId,
-                pm25: item.pm25,
-                pm10: item.pm10,
-                humidity: item.humidity,
-                temperature: item.temperature,
-                oxygen: item.oxygen,
-                pm25Remarks: item.pm25Remarks,
-                pm10Remarks: item.pm10Remarks,
-                humidityRemarks: item.humidityRemarks,
-                temperatureRemarks: item.temperatureRemarks,
-                oxygenRemarks: item.oxygenRemarks,
-                date: new Date(item.date).toLocaleString()
-            })), {
-                header: ["id", "locationId", "pm25", "pm10", "humidity", "temperature", "oxygen", "pm25Remarks", "pm10Remarks", "humidityRemarks", "temperatureRemarks", "oxygenRemarks", "date"]
-            });
-
-            XLSX.utils.sheet_add_aoa(worksheet, [
-                ["Overall Air Quality Today:", majorityRemark]
-            ], { origin: "P1" });
-
-            XLSX.utils.sheet_add_aoa(worksheet, [
-                ["ID", "Location ID", "PM2.5", "PM10", "Humidity", "Temperature", "Oxygen", "PM2.5 Remarks", "PM10 Remarks", "Humidity Remarks", "Temperature Remarks", "Oxygen Remarks", "Date"]
-            ], { origin: "A1" });
-
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Particulate Matter Data');
-
-            XLSX.writeFile(workbook, 'AirQuality_Today.xlsx');
+        if (filteredData.length === 0) {
+            alert('No data available for the selected date.');
+            return;
         }
 
+        const remarkCounts = { "Good": 0, "Poor": 0, "Unhealthy": 0, "Very Unhealthy": 0 };
+
+        filteredData.forEach(item => {
+            remarkCounts[item.pm25Remarks] = (remarkCounts[item.pm25Remarks] || 0) + 1;
+            remarkCounts[item.pm10Remarks] = (remarkCounts[item.pm10Remarks] || 0) + 1;
+            remarkCounts[item.humidityRemarks] = (remarkCounts[item.humidityRemarks] || 0) + 1;
+            remarkCounts[item.temperatureRemarks] = (remarkCounts[item.temperatureRemarks] || 0) + 1;
+            remarkCounts[item.oxygenRemarks] = (remarkCounts[item.oxygenRemarks] || 0) + 1;
+        });
+
+        const majorityRemark = Object.keys(remarkCounts).reduce((a, b) => remarkCounts[a] > remarkCounts[b] ? a : b);
+
+        const worksheet = XLSX.utils.json_to_sheet(filteredData.map(item => ({
+            id: item.id,
+            locationId: item.locationId,
+            pm25: item.pm25,
+            pm10: item.pm10,
+            humidity: item.humidity,
+            temperature: item.temperature,
+            oxygen: item.oxygen,
+            pm25Remarks: item.pm25Remarks,
+            pm10Remarks: item.pm10Remarks,
+            humidityRemarks: item.humidityRemarks,
+            temperatureRemarks: item.temperatureRemarks,
+            oxygenRemarks: item.oxygenRemarks,
+            date: new Date(item.date).toLocaleString()
+        })), {
+            header: ["id", "locationId", "pm25", "pm10", "humidity", "temperature", "oxygen", "pm25Remarks", "pm10Remarks", "humidityRemarks", "temperatureRemarks", "oxygenRemarks", "date"]
+        });
+
+        XLSX.utils.sheet_add_aoa(worksheet, [
+            ["Overall Air Quality for " + selectedDateObj.toLocaleDateString() + ":", majorityRemark]
+        ], { origin: "P1" });
+
+        XLSX.utils.sheet_add_aoa(worksheet, [
+            ["ID", "Location ID", "PM2.5", "PM10", "Humidity", "Temperature", "Oxygen", "PM2.5 Remarks", "PM10 Remarks", "Humidity Remarks", "Temperature Remarks", "Oxygen Remarks", "Date"]
+        ], { origin: "A1" });
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Particulate Matter Data');
+
+        XLSX.writeFile(workbook, `AirQuality_${selectedDateObj.toLocaleDateString()}.xlsx`);
+    }
     </script>
 </body>
 </html>
