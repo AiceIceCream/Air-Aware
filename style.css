@@ -8,7 +8,7 @@ body {
     font-family: Arial, sans-serif;
     color: #333;
     line-height: 1.6;
-    background-color: #a1c7ff;
+    background-color: #67adfd;
 }
 
 .container {
@@ -350,6 +350,10 @@ header nav a:hover {
     text-align: justify;
 }
 
+.blog-article a{
+    margin-top: 20px;
+}
+
 /* Newsletter Section */
 .newsletter {
     text-align: center;
@@ -406,3 +410,39 @@ footer {
   color: #666;
 }
 
+@media (max-width: 480px) {
+  header h1 {
+      font-size: 1.5rem;
+  }
+
+  .hero-text h2 {
+      font-size: 1.8rem;
+  }
+
+  .hero-text p {
+      font-size: 1rem;
+  }
+
+  .category-cards {
+      flex-direction: column;
+      gap: 15px;
+  }
+
+  .category-card img {
+      width: 100px;
+      height: auto;
+  }
+
+  .blog {
+      flex-direction: column;
+      text-align: justify;
+  }
+
+  .footer-connect h4 {
+      font-size: 1.2rem;
+  }
+
+  .social-icons a {
+      font-size: 1.2rem;
+  }
+}

@@ -18,6 +18,7 @@
                 <img src="excel.png" alt="Excel Icon" style="width: 20px; height: 20px; margin-right: 5px;"> Export to Excel
             </button>
         </div>
+
         <table id="dataTable">
             <tr>
                 <th>No.</th>
@@ -36,11 +37,22 @@
                 <th>Oxygen Remarks</th>
             </tr>
         </table>
+        
+        <!-- Pagination Controls -->
+        <div class="pagination" style="margin-left: 80%;">
+            <button onclick="prevPage()">Previous</button>
+            <span id="pageDisplay"></span>
+            <button onclick="nextPage()">Next</button>
+        </div>
     </div>
 
     <script>
         const apiUrl = "https://kohjcrdirmvamsjcefew.supabase.co/rest/v1/sensors";
-        const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtvaGpjcmRpcm12YW1zamNlZmV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjczMzA2MTMsImV4cCI6MjA0MjkwNjYxM30.nuysQR2UPTch2YbRDPYWAgp14Ofi73gL72T9j6JIDM4"; // Replace with your actual API key
+        const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtvaGpjcmRpcm12YW1zamNlZmV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjczMzA2MTMsImV4cCI6MjA0MjkwNjYxM30.nuysQR2UPTch2YbRDPYWAgp14Ofi73gL72T9j6JIDM4";
+
+        const rowsPerPage = 20;
+        let currentPage = 1;
+        let data = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
             try {
@@ -53,31 +65,35 @@
                     }
                 });
 
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.statusText}`);
-                }
+                if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+                
+                data = await response.json();
+                data.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by timestamp
+                renderPage();
 
-                const data = await response.json();
-                populateTable(data);
-
-                document.getElementById('exportButton').addEventListener('click', () => {
-                    exportToExcel(data);
-                });
+                document.getElementById('exportButton').addEventListener('click', () => exportToExcel(data));
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         });
 
-        function populateTable(data) {
+        function renderPage() {
             const table = document.getElementById('dataTable');
+            const pageDisplay = document.getElementById('pageDisplay');
 
-            // Sort data by timestamp in descending order (newest first)
-            data.sort((a, b) => new Date(b.date) - new Date(a.date));
+            // Clear current table rows (except headers)
+            table.querySelectorAll("tr:not(:first-child)").forEach(row => row.remove());
 
-            data.forEach((row, index) => {
+            // Calculate starting and ending index for the current page
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const pageData = data.slice(start, end);
+
+            // Populate table with rows for the current page
+            pageData.forEach((row, index) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${index + 1}</td>
+                    <td>${start + index + 1}</td>
                     <td>${formatTimestamp(row.date)}</td>
                     <td>${row.device_id}</td>
                     <td>${row.locationId}</td>
@@ -94,13 +110,27 @@
                 `;
                 table.appendChild(tr);
             });
+
+            pageDisplay.textContent = `Page ${currentPage} of ${Math.ceil(data.length / rowsPerPage)}`;
         }
 
+        function nextPage() {
+            if (currentPage * rowsPerPage < data.length) {
+                currentPage++;
+                renderPage();
+            }
+        }
 
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage();
+            }
+        }
 
         function formatTimestamp(timestamp) {
             const date = new Date(timestamp);
-            return date.toLocaleString(); // Adjust formatting as needed
+            return date.toLocaleString();
         }
 
         function exportToExcel(data) {
@@ -113,7 +143,6 @@
                 return itemDate.getTime() === today.getTime();
             });
 
-            // Map filtered data to match the specified column order
             const worksheet = XLSX.utils.json_to_sheet(todayData.map(item => ({
                 id: item.id,
                 locationId: item.locationId,
@@ -128,41 +157,16 @@
                 temperatureRemarks: item.temperatureRemarks,
                 oxygenRemarks: item.oxygenRemarks,
                 date: new Date(item.date).toLocaleString()
-            })), {
-                header: [
-                    "id", 
-                    "locationId", 
-                    "pm25", 
-                    "pm10", 
-                    "humidity", 
-                    "temperature", 
-                    "oxygen", 
-                    "pm25Remarks", 
-                    "pm10Remarks", 
-                    "humidityRemarks", 
-                    "temperatureRemarks", 
-                    "oxygenRemarks", 
-                    "date"
-                ]
-            });
+            })), { header: [
+                "id", "locationId", "pm25", "pm10", "humidity", 
+                "temperature", "oxygen", "pm25Remarks", "pm10Remarks", 
+                "humidityRemarks", "temperatureRemarks", "oxygenRemarks", "date"
+            ] });
 
-            // Add the header row with readable column names
             XLSX.utils.sheet_add_aoa(worksheet, [
-                [
-                    "ID", 
-                    "Location ID", 
-                    "PM2.5", 
-                    "PM10", 
-                    "Humidity", 
-                    "Temperature", 
-                    "Oxygen", 
-                    "PM2.5 Remarks", 
-                    "PM10 Remarks", 
-                    "Humidity Remarks", 
-                    "Temperature Remarks", 
-                    "Oxygen Remarks", 
-                    "Date"
-                ]
+                ["ID", "Location ID", "PM2.5", "PM10", "Humidity", "Temperature", 
+                "Oxygen", "PM2.5 Remarks", "PM10 Remarks", "Humidity Remarks", 
+                "Temperature Remarks", "Oxygen Remarks", "Date"]
             ], { origin: "A1" });
 
             const workbook = XLSX.utils.book_new();
@@ -170,8 +174,6 @@
 
             XLSX.writeFile(workbook, 'AirQuality_Today.xlsx');
         }
-
-
     </script>
 </body>
 </html>
