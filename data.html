@@ -143,6 +143,18 @@
                 return itemDate.getTime() === today.getTime();
             });
 
+            const remarkCounts = { "Good": 0, "Poor": 0, "Unhealthy": 0, "Very Unhealthy": 0 };
+
+            todayData.forEach(item => {
+                remarkCounts[item.pm25Remarks] = (remarkCounts[item.pm25Remarks] || 0) + 1;
+                remarkCounts[item.pm10Remarks] = (remarkCounts[item.pm10Remarks] || 0) + 1;
+                remarkCounts[item.humidityRemarks] = (remarkCounts[item.humidityRemarks] || 0) + 1;
+                remarkCounts[item.temperatureRemarks] = (remarkCounts[item.temperatureRemarks] || 0) + 1;
+                remarkCounts[item.oxygenRemarks] = (remarkCounts[item.oxygenRemarks] || 0) + 1;
+            });
+
+            const majorityRemark = Object.keys(remarkCounts).reduce((a, b) => remarkCounts[a] > remarkCounts[b] ? a : b);
+
             const worksheet = XLSX.utils.json_to_sheet(todayData.map(item => ({
                 id: item.id,
                 locationId: item.locationId,
@@ -157,16 +169,16 @@
                 temperatureRemarks: item.temperatureRemarks,
                 oxygenRemarks: item.oxygenRemarks,
                 date: new Date(item.date).toLocaleString()
-            })), { header: [
-                "id", "locationId", "pm25", "pm10", "humidity", 
-                "temperature", "oxygen", "pm25Remarks", "pm10Remarks", 
-                "humidityRemarks", "temperatureRemarks", "oxygenRemarks", "date"
-            ] });
+            })), {
+                header: ["id", "locationId", "pm25", "pm10", "humidity", "temperature", "oxygen", "pm25Remarks", "pm10Remarks", "humidityRemarks", "temperatureRemarks", "oxygenRemarks", "date"]
+            });
 
             XLSX.utils.sheet_add_aoa(worksheet, [
-                ["ID", "Location ID", "PM2.5", "PM10", "Humidity", "Temperature", 
-                "Oxygen", "PM2.5 Remarks", "PM10 Remarks", "Humidity Remarks", 
-                "Temperature Remarks", "Oxygen Remarks", "Date"]
+                ["Overall Air Quality Today:", majorityRemark]
+            ], { origin: "P1" });
+
+            XLSX.utils.sheet_add_aoa(worksheet, [
+                ["ID", "Location ID", "PM2.5", "PM10", "Humidity", "Temperature", "Oxygen", "PM2.5 Remarks", "PM10 Remarks", "Humidity Remarks", "Temperature Remarks", "Oxygen Remarks", "Date"]
             ], { origin: "A1" });
 
             const workbook = XLSX.utils.book_new();
@@ -174,6 +186,7 @@
 
             XLSX.writeFile(workbook, 'AirQuality_Today.xlsx');
         }
+
     </script>
 </body>
 </html>
