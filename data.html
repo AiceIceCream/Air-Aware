@@ -135,63 +135,91 @@
         }
 
         function exportToExcel(data, selectedDate) {
-        const selectedDateObj = selectedDate ? new Date(selectedDate) : new Date();
-        selectedDateObj.setHours(0, 0, 0, 0);
+            const selectedDateObj = selectedDate ? new Date(selectedDate) : new Date();
+            selectedDateObj.setHours(0, 0, 0, 0);
 
-        const filteredData = data.filter(item => {
-            const itemDate = new Date(item.date);
-            itemDate.setHours(0, 0, 0, 0);
-            return itemDate.getTime() === selectedDateObj.getTime();
-        });
+            const filteredData = data.filter(item => {
+                const itemDate = new Date(item.date);
+                itemDate.setHours(0, 0, 0, 0);
+                return itemDate.getTime() === selectedDateObj.getTime();
+            });
 
-        if (filteredData.length === 0) {
-            alert('No data available for the selected date.');
-            return;
+            if (filteredData.length === 0) {
+                alert('No data available for the selected date.');
+                return;
+            }
+
+            const calculatePollutantOverallRemark = (data, pollutantKey) => {
+                const remarkCounts = {};
+
+                data.forEach(item => {
+                    const remark = item[`${pollutantKey}Remarks`];
+                    if (remark) {
+                        remarkCounts[remark] = (remarkCounts[remark] || 0) + 1;
+                    }
+                });
+
+                // Get the most frequent remark
+                return Object.keys(remarkCounts).reduce((a, b) => 
+                    remarkCounts[a] > remarkCounts[b] ? a : b, "Unknown"
+                );
+            };
+
+            const pm25OverallRemark = calculatePollutantOverallRemark(filteredData, "pm25");
+            const pm10OverallRemark = calculatePollutantOverallRemark(filteredData, "pm10");
+            const humidityOverallRemark = calculatePollutantOverallRemark(filteredData, "humidity");
+            const temperatureOverallRemark = calculatePollutantOverallRemark(filteredData, "temperature");
+            const oxygenOverallRemark = calculatePollutantOverallRemark(filteredData, "oxygen");
+
+            const excelData = filteredData.map(item => ({
+                id: item.id,
+                locationId: item.locationId,
+                pm25: item.pm25,
+                pm10: item.pm10,
+                humidity: item.humidity,
+                temperature: item.temperature,
+                oxygen: item.oxygen,
+                pm25Remarks: item.pm25Remarks,
+                pm10Remarks: item.pm10Remarks,
+                humidityRemarks: item.humidityRemarks,
+                temperatureRemarks: item.temperatureRemarks,
+                oxygenRemarks: item.oxygenRemarks,
+                date: new Date(item.date).toLocaleString(),
+            }));
+
+            const worksheet = XLSX.utils.json_to_sheet(excelData, {
+                header: [
+                    "id",
+                    "locationId",
+                    "pm25",
+                    "pm10",
+                    "humidity",
+                    "temperature",
+                    "oxygen",
+                    "pm25Remarks",
+                    "pm10Remarks",
+                    "humidityRemarks",
+                    "temperatureRemarks",
+                    "oxygenRemarks",
+                    "date",
+                ],
+            });
+
+            XLSX.utils.sheet_add_aoa(worksheet, [
+                ["Overall Remarks"],
+                ["PM2.5", pm25OverallRemark],
+                ["PM10", pm10OverallRemark],
+                ["Humidity", humidityOverallRemark],
+                ["Temperature", temperatureOverallRemark],
+                ["Oxygen", oxygenOverallRemark],
+            ], { origin: `Q1` });
+
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Particulate Matter Data');
+
+            XLSX.writeFile(workbook, `AirQuality_${selectedDateObj.toLocaleDateString()}.xlsx`);
         }
 
-        const remarkCounts = { "Good": 0, "Poor": 0, "Unhealthy": 0, "Very Unhealthy": 0 };
-
-        filteredData.forEach(item => {
-            remarkCounts[item.pm25Remarks] = (remarkCounts[item.pm25Remarks] || 0) + 1;
-            remarkCounts[item.pm10Remarks] = (remarkCounts[item.pm10Remarks] || 0) + 1;
-            remarkCounts[item.humidityRemarks] = (remarkCounts[item.humidityRemarks] || 0) + 1;
-            remarkCounts[item.temperatureRemarks] = (remarkCounts[item.temperatureRemarks] || 0) + 1;
-            remarkCounts[item.oxygenRemarks] = (remarkCounts[item.oxygenRemarks] || 0) + 1;
-        });
-
-        const majorityRemark = Object.keys(remarkCounts).reduce((a, b) => remarkCounts[a] > remarkCounts[b] ? a : b);
-
-        const worksheet = XLSX.utils.json_to_sheet(filteredData.map(item => ({
-            id: item.id,
-            locationId: item.locationId,
-            pm25: item.pm25,
-            pm10: item.pm10,
-            humidity: item.humidity,
-            temperature: item.temperature,
-            oxygen: item.oxygen,
-            pm25Remarks: item.pm25Remarks,
-            pm10Remarks: item.pm10Remarks,
-            humidityRemarks: item.humidityRemarks,
-            temperatureRemarks: item.temperatureRemarks,
-            oxygenRemarks: item.oxygenRemarks,
-            date: new Date(item.date).toLocaleString()
-        })), {
-            header: ["id", "locationId", "pm25", "pm10", "humidity", "temperature", "oxygen", "pm25Remarks", "pm10Remarks", "humidityRemarks", "temperatureRemarks", "oxygenRemarks", "date"]
-        });
-
-        XLSX.utils.sheet_add_aoa(worksheet, [
-            ["Overall Air Quality for " + selectedDateObj.toLocaleDateString() + ":", majorityRemark]
-        ], { origin: "P1" });
-
-        XLSX.utils.sheet_add_aoa(worksheet, [
-            ["ID", "Location ID", "PM2.5", "PM10", "Humidity", "Temperature", "Oxygen", "PM2.5 Remarks", "PM10 Remarks", "Humidity Remarks", "Temperature Remarks", "Oxygen Remarks", "Date"]
-        ], { origin: "A1" });
-
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Particulate Matter Data');
-
-        XLSX.writeFile(workbook, `AirQuality_${selectedDateObj.toLocaleDateString()}.xlsx`);
-    }
     </script>
 </body>
 </html>
