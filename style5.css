@@ -51,6 +51,7 @@ header nav a:hover {
     align-items: flex-start; /* Align items to the top */
     gap: 20px;
     padding: 20px 0;
+    max-width: 500px;
 }
 
 .about {
@@ -88,15 +89,16 @@ header nav a:hover {
     }
 }
 
+
 /* Our Team Section */
 .team-section {
-    display: flex;
-    gap: 50px; /* Space between each team member */
-    justify-content: center; /* Center team members horizontally */
-    flex-wrap: wrap; /* Allows wrapping if there are too many members to fit in one row */
-    text-align: center;
-    padding: 40px 0;
-    }
+  display: flex;
+  gap: 50px; /* Space between each team member */
+  justify-content: center; /* Center team members horizontally */
+  flex-wrap: wrap; /* Allows wrapping if there are too many members to fit in one row */
+  text-align: center;
+  padding: 50px 0; /* Reduced padding to move the section up */
+}
     
 .team-section h2 {
     font-size: 32px;
@@ -212,14 +214,14 @@ header nav a:hover {
 }
 /* 3D Carousel Styles */
 .carousel-container {
-  perspective: 1000px; /* Gives the 3D effect */
-  margin: 20px auto;
-  width: 100%;
-  max-width: 600px;
-  height: 500px;
-  overflow: hidden;
-  position: relative;
-  display: flex;
+  position: absolute;
+  top: 30%;
+  left: 70%;
+  perspective: 3000px; 
+  transform: translate(-50%, -50%) translateY(-20px); /* Center + float effect */
+  z-index: 10;
+  padding: 20px;
+  border-radius: 10px;
 }
 
 .carousel {
@@ -228,7 +230,7 @@ header nav a:hover {
   display: flex;
   position: absolute;
   transform-style: preserve-3d;
-  animation: rotate 10s linear infinite;
+  animation: rotate 20s linear infinite;
 }
 
 .carousel-item {
@@ -241,6 +243,7 @@ header nav a:hover {
   transform-style: preserve-3d;
   transition: transform 0.5s ease;
   opacity: 0.9;
+  z-index: 0;
 }
 
 .carousel-item img {
@@ -381,7 +384,6 @@ background: #ff5e14;
 }
 .footer-widget ul li {
 display: inline-block;
-float: left;
 width: 50%;
 margin-bottom: 12px;
 }
