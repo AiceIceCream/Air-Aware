@@ -233,44 +233,50 @@
                 alert('Please enter a remark (e.g., Good, Poor, Unhealthy, etc.)');
                 return;
             }
-
+        
             // Aggregate counts per location
             const remarkCounts = {};
             data.forEach(item => {
                 const location = item.locationId;
-
+        
                 if (!remarkCounts[location]) {
                     remarkCounts[location] = 0;
                 }
-
+        
                 ['pm25Remarks', 'pm10Remarks', 'humidityRemarks', 'temperatureRemarks', 'oxygenRemarks'].forEach(remarkType => {
                     if (item[remarkType] === remarkInput) {
                         remarkCounts[location] += 1;
                     }
                 });
             });
-
+        
             // Convert the counts into an array and sort by count
             const sortedLocations = Object.entries(remarkCounts)
                 .sort((a, b) => b[1] - a[1])
                 .filter(([_, count]) => count > 0);
-
+        
             // Display the results in the fixed div at the top
             const resultContainer = document.getElementById('resultContainer');
-            resultContainer.innerHTML = ''; // Clear previous results
-
+            resultContainer.innerHTML = `
+                <button id="closeResultContainer" style="position: absolute; top: 5px; right: 5px; background: transparent; border: none; font-size: 16px; cursor: pointer;">&times;</button>
+            `;
+        
             if (sortedLocations.length === 0) {
-                resultContainer.textContent = `No locations found with "${remarkInput}" remarks.`;
-                resultContainer.style.display = 'block';
-                return;
+                const noResultsDiv = document.createElement('div');
+                noResultsDiv.textContent = `No locations found with "${remarkInput}" remarks.`;
+                resultContainer.appendChild(noResultsDiv);
+            } else {
+                sortedLocations.forEach(([location, count]) => {
+                    const div = document.createElement('div');
+                    div.textContent = `${locationNames[location] || location}: ${count} remarks`;
+                    resultContainer.appendChild(div);
+                });
             }
-
-            // Show results
-            sortedLocations.forEach(([location, count]) => {
-                const div = document.createElement('div');
-                div.textContent = `${locationNames[location] || location}: ${count} remarks`;
-                resultContainer.appendChild(div);
+        
+            resultContainer.style.display = 'block';
+        
+            // Add close button functionality
+            document.getElementById('closeResultContainer').addEventListener('click', () => {
+                resultContainer.style.display = 'none';
             });
-
-            resultContainer.style.display = 'block'; // Show result container
         }

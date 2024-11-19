@@ -15,13 +15,14 @@
 
             <div style="margin-top: 20px;">
                 <label for="remarkInput" style="font-family: 'Courier New', Courier, monospace;">Search by Remark</label>
-                <input type="text" id="remarkInput" placeholder="Type Good, Poor, etc." style="margin-left: 10px; padding: 10px; font-family: 'Courier New', Courier, monospace;" />
+                <input type="text" id="remarkInput" placeholder="Type: Good, Poor, Unhealthy etc." style="margin-left: 10px; padding: 10px; font-family: 'Courier New', Courier, monospace;" />
                 <button onclick="filterLocations()" style="margin-left: 10px; width: 100px; font-family: 'Courier New', Courier, monospace;">Search</button>
             </div>
     
             
-            <div id="resultContainer"></div>
-
+            <div id="resultContainer" style="display: none; position: absolute; border: 1px solid #ccc; padding: 10px; background: #f9f9f9; border-radius: 5px; margin-top: 20px;">
+                <button id="closeResultContainer" style="color: black; position: absolute; top: 5px; right: 5px; border: none; font-size: 16px; cursor: pointer;">x</button>
+            </div>
 
             <input style="width: 10%; margin-top: 30px; height: 45px; border-radius: 10px;" type="date" id="datePicker" />
             <button class="button-excel" id="exportButton" style="font-family: 'Courier New', Courier, monospace;">
