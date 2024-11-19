@@ -173,35 +173,35 @@
 
             const excelData = filteredData.map(item => ({
                 id: item.id,
+                date: new Date(item.date).toLocaleString(),
                 locationId: item.locationId,
                 pm25: item.pm25,
-                pm10: item.pm10,
-                humidity: item.humidity,
-                temperature: item.temperature,
-                oxygen: item.oxygen,
                 pm25Remarks: item.pm25Remarks,
+                pm10: item.pm10,
                 pm10Remarks: item.pm10Remarks,
+                humidity: item.humidity,
                 humidityRemarks: item.humidityRemarks,
+                temperature: item.temperature,
                 temperatureRemarks: item.temperatureRemarks,
+                oxygen: item.oxygen,
                 oxygenRemarks: item.oxygenRemarks,
-                date: new Date(item.date).toLocaleString(),
             }));
 
             const worksheet = XLSX.utils.json_to_sheet(excelData, {
                 header: [
                     "id",
+                    "date",
                     "locationId",
                     "pm25",
-                    "pm10",
-                    "humidity",
-                    "temperature",
-                    "oxygen",
                     "pm25Remarks",
+                    "pm10",
                     "pm10Remarks",
+                    "humidity",
                     "humidityRemarks",
+                    "temperature",
                     "temperatureRemarks",
+                    "oxygen",
                     "oxygenRemarks",
-                    "date",
                 ],
             });
 
