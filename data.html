@@ -6,17 +6,26 @@
     <title>Particulate Matter Data</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="style2.css">
+    <script src="datascript.js"></script>
 </head>
 <body>
     <div class="container">
         <div class="title-container" style="align-items: center;">
             <h1 style="font-family: 'Courier New', Courier, monospace;">Overall Data</h1>
-            <form action="set-location.html" method="get">
-                <input style="margin-top: 10px;" type="submit" value="Update Locations">
-            </form>
+
+            <div style="margin-top: 20px;">
+                <label for="remarkInput" style="font-family: 'Courier New', Courier, monospace;">Search by Remark</label>
+                <input type="text" id="remarkInput" placeholder="Type Good, Poor, etc." style="margin-left: 10px; padding: 10px; font-family: 'Courier New', Courier, monospace;" />
+                <button onclick="filterLocations()" style="margin-left: 10px; width: 100px; font-family: 'Courier New', Courier, monospace;">Search</button>
+            </div>
+    
+            <!-- Result Container -->
+            <div id="resultContainer" style="margin-top: 20px;"></div>
+
+
             <input style="width: 10%; margin-top: 30px; height: 45px; border-radius: 10px;" type="date" id="datePicker" />
-            <button class="button-excel" id="exportButton">
-                <img src="excel.png" alt="Excel Icon" style="width: 20px; height: 20px; margin-right: 5px;"> Export to Excel
+            <button class="button-excel" id="exportButton" style="font-family: 'Courier New', Courier, monospace;">
+                <img src="excel.png" alt="Excel Icon" style="width: 20px; height: 20px; margin-right: 5px; font-family: 'Courier New', Courier, monospace;"> Export Data
             </button>
         </div>
 
@@ -46,180 +55,5 @@
             <button onclick="nextPage()">Next</button>
         </div>
     </div>
-
-    <script>
-        const apiUrl = "https://kohjcrdirmvamsjcefew.supabase.co/rest/v1/sensors";
-        const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtvaGpjcmRpcm12YW1zamNlZmV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjczMzA2MTMsImV4cCI6MjA0MjkwNjYxM30.nuysQR2UPTch2YbRDPYWAgp14Ofi73gL72T9j6JIDM4";
-
-        const rowsPerPage = 20;
-        let currentPage = 1;
-        let data = [];
-
-        document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'GET',
-                headers: {
-                    'apikey': apiKey,
-                    'Authorization': `Bearer ${apiKey}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (!response.ok) throw new Error(`Error: ${response.statusText}`);
-
-            data = await response.json();
-            data.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by timestamp
-            renderPage();
-
-            document.getElementById('exportButton').addEventListener('click', () => {
-                const selectedDate = document.getElementById('datePicker').value;
-                exportToExcel(data, selectedDate);
-            });
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    });
-
-        function renderPage() {
-            const table = document.getElementById('dataTable');
-            const pageDisplay = document.getElementById('pageDisplay');
-
-            table.querySelectorAll("tr:not(:first-child)").forEach(row => row.remove());
-
-            const start = (currentPage - 1) * rowsPerPage;
-            const end = start + rowsPerPage;
-            const pageData = data.slice(start, end);
-
-            pageData.forEach((row, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${start + index + 1}</td>
-                    <td>${formatTimestamp(row.date)}</td>
-                    <td>${row.device_id}</td>
-                    <td>${row.locationId}</td>
-                    <td>${row.pm25}</td>
-                    <td>${row.pm25Remarks}</td>
-                    <td>${row.pm10}</td>
-                    <td>${row.pm10Remarks}</td>
-                    <td>${row.humidity}</td>
-                    <td>${row.humidityRemarks}</td>
-                    <td>${row.temperature}</td>
-                    <td>${row.temperatureRemarks}</td>
-                    <td>${row.oxygen}</td>
-                    <td>${row.oxygenRemarks}</td>
-                `;
-                table.appendChild(tr);
-            });
-
-            pageDisplay.textContent = `Page ${currentPage} of ${Math.ceil(data.length / rowsPerPage)}`;
-        }
-
-        function nextPage() {
-            if (currentPage * rowsPerPage < data.length) {
-                currentPage++;
-                renderPage();
-            }
-        }
-
-        function prevPage() {
-            if (currentPage > 1) {
-                currentPage--;
-                renderPage();
-            }
-        }
-
-        function formatTimestamp(timestamp) {
-            const date = new Date(timestamp);
-            return date.toLocaleString();
-        }
-
-        function exportToExcel(data, selectedDate) {
-            const selectedDateObj = selectedDate ? new Date(selectedDate) : new Date();
-            selectedDateObj.setHours(0, 0, 0, 0);
-
-            const filteredData = data.filter(item => {
-                const itemDate = new Date(item.date);
-                itemDate.setHours(0, 0, 0, 0);
-                return itemDate.getTime() === selectedDateObj.getTime();
-            });
-
-            if (filteredData.length === 0) {
-                alert('No data available for the selected date.');
-                return;
-            }
-
-            const calculatePollutantOverallRemark = (data, pollutantKey) => {
-                const remarkCounts = {};
-
-                data.forEach(item => {
-                    const remark = item[`${pollutantKey}Remarks`];
-                    if (remark) {
-                        remarkCounts[remark] = (remarkCounts[remark] || 0) + 1;
-                    }
-                });
-
-                // Get the most frequent remark
-                return Object.keys(remarkCounts).reduce((a, b) => 
-                    remarkCounts[a] > remarkCounts[b] ? a : b, "Unknown"
-                );
-            };
-
-            const pm25OverallRemark = calculatePollutantOverallRemark(filteredData, "pm25");
-            const pm10OverallRemark = calculatePollutantOverallRemark(filteredData, "pm10");
-            const humidityOverallRemark = calculatePollutantOverallRemark(filteredData, "humidity");
-            const temperatureOverallRemark = calculatePollutantOverallRemark(filteredData, "temperature");
-            const oxygenOverallRemark = calculatePollutantOverallRemark(filteredData, "oxygen");
-
-            const excelData = filteredData.map(item => ({
-                id: item.id,
-                date: new Date(item.date).toLocaleString(),
-                locationId: item.locationId,
-                pm25: item.pm25,
-                pm25Remarks: item.pm25Remarks,
-                pm10: item.pm10,
-                pm10Remarks: item.pm10Remarks,
-                humidity: item.humidity,
-                humidityRemarks: item.humidityRemarks,
-                temperature: item.temperature,
-                temperatureRemarks: item.temperatureRemarks,
-                oxygen: item.oxygen,
-                oxygenRemarks: item.oxygenRemarks,
-            }));
-
-            const worksheet = XLSX.utils.json_to_sheet(excelData, {
-                header: [
-                    "id",
-                    "date",
-                    "locationId",
-                    "pm25",
-                    "pm25Remarks",
-                    "pm10",
-                    "pm10Remarks",
-                    "humidity",
-                    "humidityRemarks",
-                    "temperature",
-                    "temperatureRemarks",
-                    "oxygen",
-                    "oxygenRemarks",
-                ],
-            });
-
-            XLSX.utils.sheet_add_aoa(worksheet, [
-                ["Overall Remarks"],
-                ["PM2.5", pm25OverallRemark],
-                ["PM10", pm10OverallRemark],
-                ["Humidity", humidityOverallRemark],
-                ["Temperature", temperatureOverallRemark],
-                ["Oxygen", oxygenOverallRemark],
-            ], { origin: `Q1` });
-
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Particulate Matter Data');
-
-            XLSX.writeFile(workbook, `AirQuality_${selectedDateObj.toLocaleDateString()}.xlsx`);
-        }
-
-    </script>
 </body>
 </html>

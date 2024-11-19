@@ -169,3 +169,33 @@ select {
         padding: 8px;
     }
 }
+
+
+
+#resultContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: none;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#resultContainer div {
+    margin: 5px 0;
+}
+
+#remarkInput {
+    margin-left: 10px;
+    padding: 5px;
+}
+
+#remarkInput:focus {
+    outline: none;
+    border: 2px solid #4CAF50;
+}
