@@ -1,41 +1,57 @@
-        const apiUrl = "https://kohjcrdirmvamsjcefew.supabase.co/rest/v1/sensors";
+        const sensorsApiUrl = "https://kohjcrdirmvamsjcefew.supabase.co/rest/v1/sensors";
+        const locationsApiUrl = "https://kohjcrdirmvamsjcefew.supabase.co/rest/v1/locations";
         const apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtvaGpjcmRpcm12YW1zamNlZmV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjczMzA2MTMsImV4cCI6MjA0MjkwNjYxM30.nuysQR2UPTch2YbRDPYWAgp14Ofi73gL72T9j6JIDM4";
 
-        const rowsPerPage = 20;
+        const rowsPerPage = 10;
         let currentPage = 1;
         let data = [];
         let locationNames = {};
 
         document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'GET',
-                headers: {
-                    'apikey': apiKey,
-                    'Authorization': `Bearer ${apiKey}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (!response.ok) throw new Error(`Error: ${response.statusText}`);
-
-            data = await response.json();
-            data.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by timestamp
-
-            data.forEach(item => {
-                locationNames[item.locationId] = item.location;
-            });
-
-            renderPage();
-
-            document.getElementById('exportButton').addEventListener('click', () => {
-                const selectedDate = document.getElementById('datePicker').value;
-                exportToExcel(data, selectedDate);
-            });
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    });
+            try {
+                // Fetch locations data
+                const locationsResponse = await fetch(locationsApiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': apiKey,
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+        
+                if (!locationsResponse.ok) throw new Error(`Locations fetch error: ${locationsResponse.statusText}`);
+        
+                const locations = await locationsResponse.json();
+                // Build a mapping of locationId to locationName
+                locations.forEach(location => {
+                    locationNames[location.locationId] = location.locationName;
+                });
+        
+                // Fetch sensors data
+                const sensorsResponse = await fetch(sensorsApiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': apiKey,
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+        
+                if (!sensorsResponse.ok) throw new Error(`Sensors fetch error: ${sensorsResponse.statusText}`);
+        
+                data = await sensorsResponse.json();
+                data.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by timestamp
+        
+                renderPage();
+        
+                document.getElementById('exportButton').addEventListener('click', () => {
+                    const selectedDate = document.getElementById('datePicker').value;
+                    exportToExcel(data, selectedDate);
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
 
         function renderPage() {
             const table = document.getElementById('dataTable');
