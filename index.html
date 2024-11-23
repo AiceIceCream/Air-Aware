@@ -30,40 +30,122 @@
         </div>
     </section>
 
-    <section class="categories container">
-        <h3 style="font-family: 'Courier New', Courier, monospace;"><u>Pollutants</u></h3>
-        <div class="category-cards">
-            <div class="category-card">
-                <img src="./media/PM.png" alt="Particulate Matter 2.5&10" data-info="Tiny particles in the air that reduce air quality and can affect health.">
-                <p style="font-family: 'Courier New', Courier, monospace; font-size: 13px;">Particulate Matter</p>
+    <section class="card-section">
+        <div class="card">
+            <div class="flip-card">
+                <div class="flip-card__container">
+                    <div class="card-front">
+                        <div class="card-front__tp card-front__tp--city">
+                            <h2 class="card-front__heading">Particulate Matter</h2>
+                        </div>
+                        <div class="card-front__bt">
+                            <p class="card-front__text-view card-front__text-view--city">View me</p>
+                        </div>
+                    </div>
+                    <div class="card-back">
+                        <img src="./media/PM.png" alt="Humidity" style="width: 100%; height: auto;">
+                    </div>
+                </div>
             </div>
-            <div class="category-card">
-                <img src="./media/Temp.png" alt="Temperature" data-info="Measures the degree of warmth, important for environmental monitoring.">
-                <p style="font-family: 'Courier New', Courier, monospace;">Temperature</p>
+            <div class="inside-page">
+                <div class="inside-page__container">
+                    <h3 class="inside-page__heading inside-page__heading--city">Air Quality Focus</h3>
+                    <p class="inside-page__text">Tiny particles in the air that reduce air quality and can affect health.</p>
+                    <a href="#" class="inside-page__btn inside-page__btn--city">View details</a>
+                </div>
             </div>
-            <div class="category-card">
-                <img src="./media/Humidity.png" alt="Humidity" data-info="Indicates the amount of moisture in the air, high humidity can affect comfort and health.">
-                <p style="font-family: 'Courier New', Courier, monospace;">Humidity</p>
+        </div>
+
+        <div class="card">
+            <div class="flip-card">
+                <div class="flip-card__container">
+                    <!-- Front Side -->
+                    <div class="card-front">
+                        <div class="card-front__tp card-front__tp--city">
+                            <h2 class="card-front__heading">Temperature</h2>
+                        </div>
+                        <div class="card-front__bt">
+                            <p class="card-front__text-view card-front__text-view--city">View me</p>
+                        </div>
+                    </div>
+                    <!-- Back Side -->
+                    <div class="card-back">
+                        <img src="./media/Temp.png" alt="More about Temperature" style="width: 100%; height: auto;">
+                    </div>
+                </div>
             </div>
-            <div class="category-card">
-                <img src="./media/Oxygen.png" alt="Oxygen" data-info="Essential for human life, indicating air quality.">
-                <p style="font-family: 'Courier New', Courier, monospace;">Oxygen</p>
+            <!-- Inside Page -->
+            <div class="inside-page">
+                <div class="inside-page__container">
+                    <h3 class="inside-page__heading inside-page__heading--city">Temperature</h3>
+                    <p class="inside-page__text">Measures the degree of warmth, important for environmental monitoring.</p>
+                    <a href="#" class="inside-page__btn inside-page__btn--city">Learn more</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="flip-card">
+                <div class="flip-card__container">
+                    <!-- Front Side -->
+                    <div class="card-front">
+                        <div class="card-front__tp card-front__tp--city">
+                            <h2 class="card-front__heading">Humidity</h2>
+                        </div>
+                        <div class="card-front__bt">
+                            <p class="card-front__text-view card-front__text-view--city">View me</p>
+                        </div>
+                    </div>
+                    <!-- Back Side -->
+                    <div class="card-back">
+                        <img src="./media/Humidity.png" alt="More about Temperature" style="width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+            <!-- Inside Page -->
+            <div class="inside-page">
+                <div class="inside-page__container">
+                    <h3 class="inside-page__heading inside-page__heading--city">Humidity</h3>
+                    <p class="inside-page__text">Indicates amount of moisture in the air, high humidity can affect comfort and health.</p>
+                    <a href="#" class="inside-page__btn inside-page__btn--city">Learn more</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="flip-card">
+                <div class="flip-card__container">
+                    <!-- Front Side -->
+                    <div class="card-front">
+                        <div class="card-front__tp card-front__tp--city">
+                            <h2 class="card-front__heading">Oxygen</h2>
+                        </div>
+                        <div class="card-front__bt">
+                            <p class="card-front__text-view card-front__text-view--city">View me</p>
+                        </div>
+                    </div>
+                    <!-- Back Side -->
+                    <div class="card-back">
+                        <img src="./media/Oxygen.png" alt="More about Temperature" style="width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+            <!-- Inside Page -->
+            <div class="inside-page">
+                <div class="inside-page__container">
+                    <h3 class="inside-page__heading inside-page__heading--city">Oxygen</h3>
+                    <p class="inside-page__text">Essential for human life, indicating air quality.</p>
+                    <a href="#" class="inside-page__btn inside-page__btn--city">Learn more</a>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Modal for displaying information -->
-    <div id="infoModal" class="modal">
-        <div class="modal-content">
-            <h2 id="modalTitle"></h2>
-            <p id="modalDescription"></p>
-            <button class="close-btn" onclick="closeModal()">Close</button>
-        </div>
-    </div>
-
     <section class="blog container">
         <div class="blog-article">  
-            <h4 style="font-family: 'Courier New', Courier, monospace;">Why Air Quality Matters: A Closer Look at Cagayan de Oro City.</h4>
+            <h4 style="font-family: 'Courier New', Courier, monospace; font-size: 30px; font-weight: bold;">
+                Why Air Quality Matters: A Closer Look at Cagayan de Oro City.
+            </h4>
             <p style="color: black; font-family: 'Courier New', Courier, monospace;">Air quality is essential for our health and the environment. Poor air quality affects respiratory health, contributes to diseases, and impacts local ecosystems. In urban areas, pollutants from traffic, industry, and other sources make air quality an important concern.</p>
             <p style="color: black; font-family: 'Courier New', Courier, monospace;">In Cagayan de Oro City, rapid urbanization has increased emissions, making it critical to monitor pollution levels. By staying informed and adopting eco-friendly practices, we can help improve the city’s air quality for a healthier community.</p>
             <a href="#" style="color: black; font-family: 'Courier New', Courier, monospace;">Read More</a>
