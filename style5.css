@@ -1,15 +1,21 @@
 @import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@900&family=Sumana:wght@700&display=swap");
+
+@font-face {
+  font-family: Edu AU VIC WA NT Pre, Merriweather;
+  src: url(media/fonts/EduAUVICWANTPre-VariableFont_wght.ttf);
+  src: url(media/fonts/Jost-Italic-VariableFont_wght.ttf);
+  src: url(media/fonts/Open_Sans/);
+}
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
 body {
     font-family: Arial, sans-serif;
     color: #333;
     line-height: 1.6;
-    background-color: #a1c7ff;
+    background-color: #67adfd;
 }
 
 .container {
@@ -17,32 +23,31 @@ body {
     max-width: 1200px;
     margin: 0 auto;
 }
-
 /* Header styling */
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 0;
-  font-size: 20px;
-  font-family: 'Times New Roman', Times, serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    font-size: 20px;
+    font-family: 'Times New Roman', Times, serif;
 }
 
 header h1 {
-  color: #fff;
+    color: #fff;
 
 }
 
 header nav a {
-  margin: 0 15px;
-  text-decoration: none;
-  color: #333;
-  transition: 0.5s;
+    margin: 0 15px;
+    text-decoration: none;
+    color: #333;
+    transition: 0.5s;
 }
 
 header nav a:hover {
-  color: white;
-  transition: 0.5s;
+    color: white;
+    transition: 0.5s;
 }
 
 /* About Section */
@@ -51,62 +56,93 @@ header nav a:hover {
     align-items: flex-start; /* Align items to the top */
     gap: 20px;
     padding: 20px 0;
-    max-width: 500px;
 }
 
 .about {
     flex: 1;
     text-align: justify;
 }
-
-.about-carousel {
-    flex: 1; /* Adjusts the space it occupies */
-    display: flex;
-    justify-content: center; /* Centers the carousel horizontally */
-    align-items: flex-start; /* Aligns carousel to the top */
-    height: auto; /* Ensures no fixed height constrains the container */
-    margin-top: 0; /* Resets any default margin */
+.about .heading h2{
+  font-family: "Edu AU VIC WA NT Pre", Arial, sans-serif; 
 }
 
-/* Optional: Reduce image sizes for better alignment */
-.about-carousel img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 10px;
-    object-fit: cover;
+.about h3{
+  font-family: "Edu AU VIC WA NT Pre", Arial, sans-serif; 
+}
+.about p {
+  font-family: "Open Sans", sans-serif;
+}
+.slideshow-container {
+  position: relative;
+  max-width: 500px; /* Adjust size */
+  margin: 0 auto; /* Center horizontally */
+  background-color: white; /* Optional: Adds contrast */
+  padding: 10px;
+  border-radius: 10px;
 }
 
-/* Media Queries for Responsiveness */
-@media (max-width: 768px) {
-    .about-container {
-        flex-direction: column;
-        align-items: center;
-    }
+.slide {
+  display: none;
+}
 
-    .about-carousel {
-        justify-content: center;
-        align-items: center; /* Center in smaller viewports */
-    }
+.slide img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.prev, .next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(51, 51, 51, 0.5);
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.prev {
+  left: -40px; /* Adjust for alignment */
+}
+
+.next {
+  right: -40px;
+}
+.fade {
+  animation: fadeEffect 1.5s ease-in-out;
+}
+
+@keyframes fadeEffect {
+  from {
+      opacity: 0.5;
+  }
+  to {
+      opacity: 1;
+  }
 }
 
 
 /* Our Team Section */
 .team-section {
-  display: flex;
-  gap: 50px; /* Space between each team member */
-  justify-content: center; /* Center team members horizontally */
-  flex-wrap: wrap; /* Allows wrapping if there are too many members to fit in one row */
-  text-align: center;
-  padding: 50px 0; /* Reduced padding to move the section up */
-}
+    display: flex;
+    gap: px; /* Space between each team member */
+    justify-content: center; /* Center team members horizontally */
+    flex-wrap: wrap; /* Allows wrapping if there are too many members to fit in one row */
+    text-align: center;
+    padding: 40px 0;
+    }
     
 .team-section h2 {
+    font-family: "Edu AU VIC WA NT Pre", Arial, sans-serif; 
     font-size: 32px;
     color: #404245;
     margin-bottom: 20px;
 }
 
 .person {
+    font-family: "Edu AU VIC WA NT Pre", Arial, sans-serif; 
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -214,14 +250,14 @@ header nav a:hover {
 }
 /* 3D Carousel Styles */
 .carousel-container {
-  position: absolute;
-  top: 30%;
-  left: 70%;
-  perspective: 3000px; 
-  transform: translate(-50%, -50%) translateY(-20px); /* Center + float effect */
-  z-index: 10;
-  padding: 20px;
-  border-radius: 10px;
+  perspective: 1000px; /* Gives the 3D effect */
+  margin: 20px auto;
+  width: 100%;
+  max-width: 600px;
+  height: 500px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
 }
 
 .carousel {
@@ -230,7 +266,7 @@ header nav a:hover {
   display: flex;
   position: absolute;
   transform-style: preserve-3d;
-  animation: rotate 20s linear infinite;
+  animation: rotate 10s linear infinite;
 }
 
 .carousel-item {
@@ -243,7 +279,6 @@ header nav a:hover {
   transform-style: preserve-3d;
   transition: transform 0.5s ease;
   opacity: 0.9;
-  z-index: 0;
 }
 
 .carousel-item img {
@@ -287,14 +322,24 @@ ul {
   padding: 0px;
 }
 .footer-section {
-background: #151414;
-position: relative;
+  display: flex; /* Enable horizontal layout */
+  justify-content: space-between; /* Add spacing between elements */
+  align-items: flex-start; /* Align items at the top */
+  background: #151414;
+  padding: 20px;
+}
+.single-cta {
+  flex: 1; /* Equal space for each child div */
+  margin-right: 20px; /* Add spacing between sections */
+}
+.footer-content {
+  flex: 2; /* Wider content section */
 }
 .footer-cta {
 border-bottom: 1px solid #373636;
 }
 .single-cta i {
-color: #ff5e14;
+color: #67adfd;
 font-size: 30px;
 float: left;
 margin-top: 8px;
@@ -384,6 +429,7 @@ background: #ff5e14;
 }
 .footer-widget ul li {
 display: inline-block;
+float: left;
 width: 50%;
 margin-bottom: 12px;
 }
@@ -393,30 +439,6 @@ color: #ff5e14;
 .footer-widget ul li a {
 color: #878787;
 text-transform: capitalize;
-}
-.subscribe-form {
-position: relative;
-overflow: hidden;
-}
-.subscribe-form input {
-width: 100%;
-padding: 14px 28px;
-background: #2E2E2E;
-border: 1px solid #2E2E2E;
-color: #fff;
-}
-.subscribe-form button {
-  position: absolute;
-  right: 0;
-  background: #ff5e14;
-  padding: 13px 20px;
-  border: 1px solid #ff5e14;
-  top: 0;
-}
-.subscribe-form button i {
-color: #fff;
-font-size: 22px;
-transform: rotate(-6deg);
 }
 .copyright-area{
 background: #202020;
