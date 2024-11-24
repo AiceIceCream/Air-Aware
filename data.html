@@ -15,6 +15,9 @@
             <div class="user-settings">
                 <div class="user-profile">
                     <img id="userImage" alt="User Avatar" />
+                    <div class="username-container">
+                        <span id="username">Admin</span>
+                    </div>
                     <div class="dropdown">
                         <button class="dropdown-button" style="color: black;">⚙</button>
                         <div class="dropdown-menu">
@@ -37,7 +40,7 @@
                 </div>
             </div>
 
-            <h1 style="font-family: 'Courier New', Courier, monospace;">Overall Data</h1>
+            <h1 style="font-family: 'Courier New', Courier, monospace; display: flex; margin-top: 150px;">Overall Data</h1>
 
             <div style="margin-top: 20px;">
                 <label for="remarkInput" style="font-family: 'Courier New', Courier, monospace;">Search by Remark</label>
@@ -93,9 +96,12 @@ document.getElementById("logoutButton").addEventListener("click", async () => {
     if (error) {
         alert("Error logging out: " + error.message);
     } else {
-        window.location.href = "login.html";  // Redirect to login page after logging out
+        // Reset image to default or keep it as is
+        document.getElementById("userImage").src = "./media/Logo.png";  // Set a default image if needed
+        window.location.href = "login.html";  // Redirect to login page
     }
 });
+
 
 async function checkAuth() {
     const { data: { user }, error } = await supabase.auth.getUser();
@@ -124,35 +130,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         editProfileModal.classList.add("hidden");
     });
 
-    // Function to check if the user has a profile image
-async function getUserProfileImage() {
-    const { data: { user }, error } = await supabase.auth.getUser();
-    if (error || !user) {
-        alert("You need to be logged in to access this.");
-        window.location.href = "login.html";  // Redirect if user is not authenticated
-        return;
-    }
+    // Save profile picture
+    document.getElementById("saveChangesButton").addEventListener("click", async () => {
+        const fileInput = document.getElementById("newUserImage");
+        const file = fileInput.files[0];
+        if (file) {
+            await uploadImage(file);
+        } else {
+            alert("Please select an image.");
+        }
+    });
+});
 
-    // Check if the user has a stored profile image in Supabase
-    const { data, error: storageError } = await supabase.storage
-        .from('images')  // Ensure this is the correct bucket
-        .list('', {
-            filter: `${user.id}_`  // Filter for the user's ID prefix (assuming file names are user.id_filename)
-        });
-
-    if (storageError) {
-        console.error("Error fetching user image:", storageError.message);
-        return;
-    }
-
-    if (data.length > 0) {
-        const imagePath = `public/${data[0].name}`;  // Assuming only one image per user
-        const publicUrl = `https://kohjcrdirmvamsjcefew.supabase.co/storage/v1/object/public/images/${imagePath}`;
-        document.getElementById("userImage").src = publicUrl;  // Set the user's profile image
-    }
-}
-
-// Upload profile image to Supabase storage
 async function uploadImage(file) {
     const { data: { user }, error } = await supabase.auth.getUser();
     if (error || !user) {
@@ -160,12 +149,11 @@ async function uploadImage(file) {
         return;
     }
 
-    const fileName = `${user.id}_${file.name}`;  // File name includes user ID to make it unique
-    const filePath = `public/${fileName}`;  // Path within 'public' folder in Supabase storage
+    const fileName = `${user.id}_${file.name}`;
+    const filePath = `public/${fileName}`;
 
-    // Upload the file to Supabase storage
     const { data, error: uploadError } = await supabase.storage
-        .from('images')  // Ensure this is the correct bucket
+        .from('images')  // Use your actual bucket name
         .upload(filePath, file);
 
     if (uploadError) {
@@ -173,30 +161,49 @@ async function uploadImage(file) {
         alert("Error uploading image: " + uploadError.message);
         return;
     } else {
-        console.log("File uploaded successfully:", data);
-        alert("Updated Successfully");
-        // Set the image to the user's profile
-        const publicUrl = `https://kohjcrdirmvamsjcefew.supabase.co/storage/v1/object/public/images/${filePath}`;
-        document.getElementById("userImage").src = publicUrl;
+        alert("Update Successfully!");
     }
+
+    const publicUrl = `https://kohjcrdirmvamsjcefew.supabase.co/storage/v1/object/public/images/${filePath}`;
+    
+    const { error: updateError } = await supabase.auth.updateUser({
+        data: {
+            avatar_url: publicUrl  
+        }
+    });
+
+    if (updateError) {
+        console.error("Error updating user metadata:", updateError.message);
+        alert("Error updating profile: " + updateError.message);
+        return;
+    }
+
+    document.getElementById("userImage").src = publicUrl;
 }
 
-// On page load, check if the user has an existing image
-document.addEventListener("DOMContentLoaded", async () => {
-    await getUserProfileImage();  // Retrieve and display the image if exists
-});
 
-// Event listener to handle file selection and image upload
-document.getElementById("saveChangesButton").addEventListener("click", async () => {
-    const fileInput = document.getElementById("newUserImage");
-    const file = fileInput.files[0];
-    if (file) {
-        await uploadImage(file);
-    } else {
-        alert("Please select an image.");
+async function loadUserImage() {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) {
+        console.error("Error fetching user:", error.message);
+        return;
     }
-});
 
+    if (user.user_metadata && user.user_metadata.avatar_url) {
+        document.getElementById("userImage").src = user.user_metadata.avatar_url;
+    }
+
+    if (user.user_metadata && user.user_metadata.username) {
+        document.getElementById("username").textContent = user.user_metadata.username;
+    }
+
+    console.log(user.user_metadata);
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+    await checkAuth();
+    await loadUserImage();
+});
 
 
 

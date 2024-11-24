@@ -30,12 +30,6 @@ body {
     gap: 10px;
 }
 
-.user-profile {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
 .user-profile img {
     width: 50px;
     height: 50px;
@@ -44,8 +38,27 @@ body {
     cursor: pointer;
 }
 
+.user-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.username-container {
+    margin-top: 10px;  /* Adjust the space between the image and the username */
+    font-family: 'Courier New', Courier, monospace;  /* Customize the font */
+    font-size: 16px;  /* Adjust the font size */
+    color: #333;  /* Change the text color */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
 .dropdown {
-    position: relative;
+    position: absolute;
+    left: 80px;
 }
 
 .dropdown-button {
