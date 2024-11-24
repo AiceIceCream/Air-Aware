@@ -7,10 +7,36 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="style2.css">
     <script src="datascript.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0"></script>
 </head>
 <body>
     <div class="container">
         <div class="title-container" style="align-items: center;">
+            <div class="user-settings">
+                <div class="user-profile">
+                    <img id="userImage" alt="User Avatar" />
+                    <div class="dropdown">
+                        <button class="dropdown-button" style="color: black;">⚙</button>
+                        <div class="dropdown-menu">
+                            <button id="editProfileButton">Edit Profile</button>
+                            <button id="logoutButton">Logout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="editProfileModal" class="modal hidden">
+                <div class="modal-content">
+                    <span class="close-button" id="closeModal">&times;</span>
+                    <h2>Edit Profile</h2>
+                    <form id="editProfileForm">
+                        <label for="newUserImage">Profile Picture</label>
+                        <input type="file" id="newUserImage" name="newUserImage" accept="image/*" max-size="1024" />
+                        <button type="button" id="saveChangesButton">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+
             <h1 style="font-family: 'Courier New', Courier, monospace;">Overall Data</h1>
 
             <div style="margin-top: 20px;">
@@ -19,7 +45,6 @@
                 <button onclick="filterLocations()" style="margin-left: 10px; width: 100px; font-family: 'Courier New', Courier, monospace;">Search</button>
             </div>
     
-            
             <div id="resultContainer" style="display: none; position: absolute; border: 1px solid #ccc; padding: 10px; background: #f9f9f9; border-radius: 5px; margin-top: 20px;">
                 <button id="closeResultContainer" style="color: black; position: absolute; top: 5px; right: 5px; border: none; font-size: 16px; cursor: pointer;">x</button>
             </div>
@@ -50,11 +75,139 @@
         </table>
         
         <!-- Pagination Controls -->
-        <div class="pagination" style="margin-left: 80%;">
+        <div class="pagination" style="margin-left: 75%;">
             <button onclick="prevPage()">Previous</button>
             <span id="pageDisplay"></span>
             <button onclick="nextPage()">Next</button>
         </div>
     </div>
+
+    <script>
+const SUPABASE_URL = "https://kohjcrdirmvamsjcefew.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtvaGpjcmRpcm12YW1zamNlZmV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjczMzA2MTMsImV4cCI6MjA0MjkwNjYxM30.nuysQR2UPTch2YbRDPYWAgp14Ofi73gL72T9j6JIDM4";
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Logout functionality
+document.getElementById("logoutButton").addEventListener("click", async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+        alert("Error logging out: " + error.message);
+    } else {
+        window.location.href = "login.html";  // Redirect to login page after logging out
+    }
+});
+
+async function checkAuth() {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) {
+        alert("You need to be logged in to upload an image.");
+        console.log(user);
+        window.location.href = "login.html";  // Redirect to login page if not authenticated
+    }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+    // Check authentication on page load
+    await checkAuth();
+
+    const editProfileModal = document.getElementById("editProfileModal");
+    const editProfileButton = document.getElementById("editProfileButton");
+    const closeModalButton = document.getElementById("closeModal");
+
+    // Open the modal when 'Edit Profile' button is clicked
+    editProfileButton.addEventListener("click", () => {
+        editProfileModal.classList.remove("hidden");
+    });
+
+    // Close the modal when 'X' button is clicked
+    closeModalButton.addEventListener("click", () => {
+        editProfileModal.classList.add("hidden");
+    });
+
+    // Function to check if the user has a profile image
+async function getUserProfileImage() {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) {
+        alert("You need to be logged in to access this.");
+        window.location.href = "login.html";  // Redirect if user is not authenticated
+        return;
+    }
+
+    // Check if the user has a stored profile image in Supabase
+    const { data, error: storageError } = await supabase.storage
+        .from('images')  // Ensure this is the correct bucket
+        .list('', {
+            filter: `${user.id}_`  // Filter for the user's ID prefix (assuming file names are user.id_filename)
+        });
+
+    if (storageError) {
+        console.error("Error fetching user image:", storageError.message);
+        return;
+    }
+
+    if (data.length > 0) {
+        const imagePath = `public/${data[0].name}`;  // Assuming only one image per user
+        const publicUrl = `https://kohjcrdirmvamsjcefew.supabase.co/storage/v1/object/public/images/${imagePath}`;
+        document.getElementById("userImage").src = publicUrl;  // Set the user's profile image
+    }
+}
+
+// Upload profile image to Supabase storage
+async function uploadImage(file) {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error || !user) {
+        alert("You need to be logged in to upload an image.");
+        return;
+    }
+
+    const fileName = `${user.id}_${file.name}`;  // File name includes user ID to make it unique
+    const filePath = `public/${fileName}`;  // Path within 'public' folder in Supabase storage
+
+    // Upload the file to Supabase storage
+    const { data, error: uploadError } = await supabase.storage
+        .from('images')  // Ensure this is the correct bucket
+        .upload(filePath, file);
+
+    if (uploadError) {
+        console.error("Error uploading image:", uploadError.message);
+        alert("Error uploading image: " + uploadError.message);
+        return;
+    } else {
+        console.log("File uploaded successfully:", data);
+        alert("Updated Successfully");
+        // Set the image to the user's profile
+        const publicUrl = `https://kohjcrdirmvamsjcefew.supabase.co/storage/v1/object/public/images/${filePath}`;
+        document.getElementById("userImage").src = publicUrl;
+    }
+}
+
+// On page load, check if the user has an existing image
+document.addEventListener("DOMContentLoaded", async () => {
+    await getUserProfileImage();  // Retrieve and display the image if exists
+});
+
+// Event listener to handle file selection and image upload
+document.getElementById("saveChangesButton").addEventListener("click", async () => {
+    const fileInput = document.getElementById("newUserImage");
+    const file = fileInput.files[0];
+    if (file) {
+        await uploadImage(file);
+    } else {
+        alert("Please select an image.");
+    }
+});
+
+
+
+
+
+// Listen for auth state changes (to automatically update the login state)
+supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN') {
+    } else if (event === 'SIGNED_OUT') {
+        window.location.href = "index.html";
+    }
+});
+    </script>
 </body>
 </html>

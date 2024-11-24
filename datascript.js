@@ -9,7 +9,6 @@
 
         document.addEventListener('DOMContentLoaded', async () => {
             try {
-                // Fetch locations data
                 const locationsResponse = await fetch(locationsApiUrl, {
                     method: 'GET',
                     headers: {
@@ -22,13 +21,11 @@
                 if (!locationsResponse.ok) throw new Error(`Locations fetch error: ${locationsResponse.statusText}`);
         
                 const locations = await locationsResponse.json();
-                // Build a mapping of locationId to locationName
                 locations.forEach(location => {
                     locationNames[location.locationId] = location.locationName;
                 });
         
-                // Fetch sensors data
-                const sensorsResponse = await fetch(sensorsApiUrl, {
+                const sensorsResponse = await fetch(`${sensorsApiUrl}?order=date.desc` , {
                     method: 'GET',
                     headers: {
                         'apikey': apiKey,
@@ -89,12 +86,6 @@
 
 
 
-
-
-
-
-
-
         function nextPage() {
             if (currentPage * rowsPerPage < data.length) {
                 currentPage++;
@@ -109,23 +100,14 @@
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         function formatTimestamp(timestamp) {
             const date = new Date(timestamp);
             return date.toLocaleString();
         }
+
+
+
+
 
         function exportToExcel(data, selectedDate) {
             const selectedDateObj = selectedDate ? new Date(selectedDate) : new Date();
@@ -249,13 +231,10 @@
                     }
                 });
             });
-        
-            // Convert the counts into an array and sort by count
-            const sortedLocations = Object.entries(remarkCounts)
+                    const sortedLocations = Object.entries(remarkCounts)
                 .sort((a, b) => b[1] - a[1])
                 .filter(([_, count]) => count > 0);
         
-            // Display the results in the fixed div at the top
             const resultContainer = document.getElementById('resultContainer');
             resultContainer.innerHTML = `
                 <button id="closeResultContainer" style="position: absolute; top: 5px; right: 5px; background: transparent; border: none; font-size: 16px; cursor: pointer;">&times;</button>
@@ -274,9 +253,4 @@
             }
         
             resultContainer.style.display = 'block';
-        
-            // Add close button functionality
-            document.getElementById('closeResultContainer').addEventListener('click', () => {
-                resultContainer.style.display = 'none';
-            });
         }

@@ -14,7 +14,6 @@
                 <th>Device ID</th>
                 <th>Location</th>
             </tr>
-            <!-- Rows will be added here by JavaScript -->
         </table>
     </div>
     <div>
@@ -22,7 +21,6 @@
             <h2>Update Device Location</h2>
             <label for="device_id">Select Device ID:</label>
             <select name="device_id" id="device_id" required>
-                <!-- Options will be added here by JavaScript -->
             </select><br>
             <label for="location">Location:</label>
             <input type="text" name="location" id="location" required><br>
@@ -31,7 +29,6 @@
     </div>
 
     <script>
-        // Check for access
         if (!localStorage.getItem('accessGranted')) {
             window.location.href = 'set-location.html';
         }
