@@ -632,6 +632,7 @@ body {
   height: 100%;
   justify-content: center;
   width: 100%;
+  gap: 3%;
 }
 
 /* A container to hold the flip card and the inside page */
