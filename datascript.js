@@ -244,8 +244,18 @@ function exportToExcel(data, selectedDate) {
 
 ///For the Search Engine
 
+function showResultContainer() {
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.style.display = 'block';
+}
+
+function hideResultContainer() {
+    const resultContainer = document.getElementById('resultContainer');
+    resultContainer.style.display = 'none';
+}
+
 function filterLocations() {
-    const remarkInput = document.getElementById('remarkInput').value.trim();
+    const remarkInput = document.getElementById('remarkInput').value.trim().toLowerCase(); 
     const selectedDate = document.getElementById('datePicker').value;
 
     if (!remarkInput) {
@@ -269,7 +279,7 @@ function filterLocations() {
             itemDate >= startDate &&
             itemDate <= endDate &&
             ['pm25Remarks', 'pm10Remarks', 'humidityRemarks', 'temperatureRemarks', 'oxygenRemarks'].some(remarkType =>
-                item[remarkType] === remarkInput
+                item[remarkType]?.toLowerCase() === remarkInput
             )
         );
     });
@@ -280,37 +290,36 @@ function filterLocations() {
 function displaySearchResults(filteredData, remarkInput) {
     const resultContainer = document.getElementById('resultContainer');
     resultContainer.innerHTML = `
-        <button id="closeResultContainer" style="position: absolute; top: 5px; right: 25px; background: black; border: none; font-size: 16px; cursor: pointer;">&times;</button>
+        <button id="closeResultContainer">&times;</button>
     `;
 
     if (filteredData.length === 0) {
         const noResultsDiv = document.createElement('div');
-        noResultsDiv.textContent = `No locations found with "${remarkInput}" remarks for the selected date.`;
+        noResultsDiv.textContent = `No locations found with "${remarkInput}" remarks.`;
         resultContainer.appendChild(noResultsDiv);
     } else {
         const remarkCounts = {};
 
+        // Count remarks by location name using locationNames map
         filteredData.forEach(item => {
-            const location = item.locationId;
-            if (!remarkCounts[location]) {
-                remarkCounts[location] = 0;
-            }
-            remarkCounts[location]++;
+            const locationName = locationNames[item.locationId] || `Unknown (${item.locationId})`;
+            remarkCounts[locationName] = (remarkCounts[locationName] || 0) + 1;
         });
 
+        // Sort locations by count in descending order
         const sortedLocations = Object.entries(remarkCounts).sort((a, b) => b[1] - a[1]);
 
-        sortedLocations.forEach(([location, count]) => {
+        // Add each location and its remark count to the container
+        sortedLocations.forEach(([locationName, count]) => {
             const div = document.createElement('div');
-            const txt = document.createElement('text');
-            div.textContent = `${locationNames[location] || location}: ${count} ${remarkInput} remarks`;
+            div.textContent = `${locationName}: ${count} ${remarkInput} remarks`;
             resultContainer.appendChild(div);
         });
     }
 
-    resultContainer.style.display = 'block';
+    // Show the result container
+    showResultContainer();
 
-    document.getElementById('closeResultContainer').addEventListener('click', () => {
-        resultContainer.style.display = 'none';
-    });
+    // Attach event listener for closing the container
+    document.getElementById('closeResultContainer').addEventListener('click', hideResultContainer);
 }
