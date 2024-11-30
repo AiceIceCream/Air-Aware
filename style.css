@@ -633,6 +633,11 @@ body {
   justify-content: center;
   width: 100%;
   gap: 3%;
+  flex-direction: row;
+  row-gap: 20px;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
 }
 
 /* A container to hold the flip card and the inside page */

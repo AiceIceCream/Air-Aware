@@ -233,21 +233,53 @@ header nav a:hover {
     margin-top: 4px;
   }
 
-/* Divider */
-/* .divider {
-    background-color: #ca6060;
-    height: 1px;
-    width: 80px;
-    margin: 8px 0;
-} */
+  @media (max-width: 1024px) {
+    .about-container {
+        flex-direction: column;
+        text-align: center;
+    }
 
-/* Media Query for Responsiveness */ 
-@media (max-width: 768px) {
-    .team-container {
-        width: 150px;
-        height: 150px;
+    .slideshow-container {
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    .team-section {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
 }
+
+@media (max-width: 600px) {
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    header nav a {
+        display: block;
+        margin: 5px 0;
+    }
+
+    .about-container, .team-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .team-section .person {
+        width: 100%;
+    }
+
+    .footer-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .single-cta {
+        margin-bottom: 20px;
+    }
+}
+
 /* 3D Carousel Styles */
 .carousel-container {
   perspective: 1000px; /* Gives the 3D effect */

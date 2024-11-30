@@ -143,5 +143,28 @@ body {
     border-radius: 20px;
 }
 
+.otpverify {
+  width: 50%;
+  display: flex;
+  position: fixed;
+  gap: 20px;
+  bottom: 150px;
+  right: 100px;
+}
+
+.otpverify{
+  display: none;
+}
+
+.btn {
+  padding: 10px;
+  background-color: rgb(53, 142, 201);
+  outline: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 105px;
+}
+
 /*     $apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtvaGpjcmRpcm12YW1zamNlZmV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjczMzA2MTMsImV4cCI6MjA0MjkwNjYxM30.nuysQR2UPTch2YbRDPYWAgp14Ofi73gL72T9j6JIDM4";
  */
