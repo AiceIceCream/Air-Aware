@@ -31,8 +31,8 @@ body {
 }
 
 .user-profile img {
-    width: 50px;
-    height: 50px;
+    width: clamp(40px, 10vw, 60px); /* Adjust size dynamically */
+    height: clamp(40px, 10vw, 60px);
     border-radius: 50%;
     object-fit: cover;
     cursor: pointer;
@@ -146,6 +146,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
+    font-size: clamp(0.8rem, 1vw, 1rem);
     table-layout: auto; /* Let the table adjust to the container width */
 }
 
@@ -195,6 +196,9 @@ button {
 
 h1, h2 {
     color: #333;
+    font-size: clamp(1.2rem, 2vw, 2rem); /* Dynamic font size */
+    text-align: center;
+    margin: 0 10px;
 }
 
 label {
@@ -240,6 +244,10 @@ select {
     flex-grow: 1;
 }
 
+#datePicker {
+    width: 10%;
+}
+
 .title-container form input[type="submit"] {
     width: auto;
     margin-left: 20px;
@@ -252,6 +260,10 @@ select {
     .title-container {
         flex-direction: column; 
         align-items: stretch;
+    }
+
+    #datePicker {
+        width: 100%;
     }
 
     .title-container h1 {
@@ -281,13 +293,18 @@ select {
         padding: 15px;
     }
 
+    #datePicker {
+        width: 100%;
+    }
+
     h1 {
         font-size: 1.25rem;
     }
 
     button, .button-excel {
         font-size: 12px;
-        padding: 8px;
+        padding: 5px;
+        gap: 10px;
     }
 }
 

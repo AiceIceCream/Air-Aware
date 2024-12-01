@@ -289,8 +289,12 @@ function filterLocations() {
 
 function displaySearchResults(filteredData, remarkInput) {
     const resultContainer = document.getElementById('resultContainer');
+    const selectedDate = document.getElementById('datePicker').value;
     resultContainer.innerHTML = `
         <button id="closeResultContainer">&times;</button>
+        <div id="selectedDate" style="font-weight: bold; margin-bottom: 10px;">
+            Results for: ${new Date(selectedDate).toLocaleDateString()}
+        </div>
     `;
 
     if (filteredData.length === 0) {
