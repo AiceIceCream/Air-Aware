@@ -263,43 +263,39 @@ function filterLocations() {
         return;
     }
 
-    if (!selectedDate) {
-        alert('Please select a date.');
-        return;
+    let filteredData = data.filter(item =>
+        ['pm25Remarks', 'pm10Remarks', 'humidityRemarks', 'temperatureRemarks', 'oxygenRemarks'].some(remarkType =>
+            item[remarkType]?.toLowerCase() === remarkInput
+        )
+    );
+
+    if (selectedDate) {
+        const startDate = new Date(selectedDate);
+        startDate.setHours(0, 0, 0, 0);
+        const endDate = new Date(selectedDate);
+        endDate.setHours(23, 59, 59, 999);
+
+        filteredData = filteredData.filter(item => {
+            const itemDate = new Date(item.date);
+            return itemDate >= startDate && itemDate <= endDate;
+        });
     }
 
-    const startDate = new Date(selectedDate);
-    startDate.setHours(0, 0, 0, 0);
-    const endDate = new Date(selectedDate);
-    endDate.setHours(23, 59, 59, 999);
-
-    const filteredData = data.filter(item => {
-        const itemDate = new Date(item.date);
-        return (
-            itemDate >= startDate &&
-            itemDate <= endDate &&
-            ['pm25Remarks', 'pm10Remarks', 'humidityRemarks', 'temperatureRemarks', 'oxygenRemarks'].some(remarkType =>
-                item[remarkType]?.toLowerCase() === remarkInput
-            )
-        );
-    });
-
-    displaySearchResults(filteredData, remarkInput);
+    displaySearchResults(filteredData, remarkInput, selectedDate);
 }
 
-function displaySearchResults(filteredData, remarkInput) {
+function displaySearchResults(filteredData, remarkInput, selectedDate) {
     const resultContainer = document.getElementById('resultContainer');
-    const selectedDate = document.getElementById('datePicker').value;
     resultContainer.innerHTML = `
         <button id="closeResultContainer">&times;</button>
         <div id="selectedDate" style="font-weight: bold; margin-bottom: 10px;">
-            Results for: ${new Date(selectedDate).toLocaleDateString()}
+            Results for: ${selectedDate ? new Date(selectedDate).toLocaleDateString() : 'All Dates'}
         </div>
     `;
 
     if (filteredData.length === 0) {
         const noResultsDiv = document.createElement('div');
-        noResultsDiv.textContent = `No locations found with "${remarkInput}" remarks.`;
+        noResultsDiv.textContent = `No locations found with "${remarkInput}" remarks${selectedDate ? ` on ${new Date(selectedDate).toLocaleDateString()}` : ''}.`;
         resultContainer.appendChild(noResultsDiv);
     } else {
         const remarkCounts = {};
@@ -320,6 +316,58 @@ function displaySearchResults(filteredData, remarkInput) {
             resultContainer.appendChild(div);
         });
     }
+
+    // Add remarks table at the bottom
+    const remarksTable = `
+        <table class="remarks-table" style="margin-top: 20px; width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="border: 1px solid #ccc; padding: 10px;">Remarks</th>
+                    <th style="border: 1px solid #ccc; padding: 10px;">Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="background-color: #14bb00; color: white; border: 1px solid #ccc; padding: 10px;">Good</td>
+                    <td style="border: 1px solid #ccc; padding: 10px;">People are okay to roam outdoors.</td>
+                </tr>
+                <tr>
+                    <td style="background-color: #f9c71d; color: white; border: 1px solid #ccc; padding: 10px;">Fair</td>
+                    <td style="border: 1px solid #ccc; padding: 10px;">People are okay to roam outdoors with caution.</td>
+                </tr>
+                <tr>
+                    <td style="background-color: #fdb114; color: white; border: 1px solid #ccc; padding: 10px;">Unhealthy</td>
+                    <td style="border: 1px solid #ccc; padding: 10px;">People with respiratory disease, such as asthma, should limit outdoor exertion.</td>
+                </tr>
+                <tr>
+                    <td style="background-color: red; color: white; border: 1px solid #ccc; padding: 10px;">Very Unhealthy</td>
+                    <td style="border: 1px solid #ccc; padding: 10px;">
+                        Pedestrians should avoid heavy traffic areas. People with heart or respiratory disease, such as asthma, 
+                        should stay indoors and rest as much as possible. Unnecessary trips should be postponed. 
+                        People should voluntarily restrict the use of vehicles.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background-color: purple; color: white; border: 1px solid #ccc; padding: 10px;">Severely Unhealthy</td>
+                    <td style="border: 1px solid #ccc; padding: 10px;">
+                        Pedestrians should avoid heavy traffic areas. People with heart or respiratory disease, such as asthma, 
+                        should stay indoors and rest as much as possible. Unnecessary trips should be postponed. 
+                        Motor vehicle use may be restricted. Industrial activities may be curtailed.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background-color: maroon; color: white; border: 1px solid #ccc; padding: 10px;">Emergency</td>
+                    <td style="border: 1px solid #ccc; padding: 10px;">
+                        Everyone should remain indoors (keeping windows and doors closed). Motor vehicle use should be 
+                        prohibited except for emergency situations. Industrial activities, except that which is vital for 
+                        public safety and health, should be curtailed.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    `;
+
+    resultContainer.innerHTML += remarksTable;
 
     // Show the result container
     showResultContainer();
