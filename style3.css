@@ -1,170 +1,170 @@
 /* Center the form on the page */
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    background-color: #a1c7ff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  background-color: #a1c7ff;
 }
 
 /* Adjust form dimensions */
 .form_main {
-    width: 400px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: rgb(255, 255, 255);
-    padding: 40px 40px;
-    box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.062);
-    position: relative;
-    overflow: hidden;
-    border-radius: 8px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(255, 255, 255);
+  padding: 40px 40px;
+  box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.062);
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
 }
 
 /* Background shape */
 .form_main::before {
-    position: absolute;
-    content: "";
-    width: 500px;
-    height: 500px;
-    background-color: rgb(115, 198, 236);
-    transform: rotate(45deg);
-    left: -250px;
-    bottom: 30px;
-    z-index: 1;
-    border-radius: 50px;
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.082);
+  position: absolute;
+  content: "";
+  width: 500px;
+  height: 500px;
+  background-color: rgb(115, 198, 236);
+  transform: rotate(45deg);
+  left: -250px;
+  bottom: 30px;
+  z-index: 1;
+  border-radius: 50px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.082);
 }
 
 /* Enhance the heading size */
 .heading {
-    font-size: 2.5em;
-    color: #2e2e2e;
-    font-weight: 700;
-    margin: 5px 0 20px 0;
-    z-index: 2;
+  font-size: 2.5em;
+  color: #2e2e2e;
+  font-weight: 700;
+  margin: 5px 0 20px 0;
+  z-index: 2;
 }
 
 /* Adjust input container and input field dimensions */
 .inputContainer {
-    width: 100%;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-    margin-bottom: 20px;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  margin-bottom: 20px;
 }
 
 .inputField {
-    width: 100%;
-    height: 40px;
-    background-color: transparent;
-    border: none;
-    border-bottom: 2px solid rgb(173, 173, 173);
-    color: black;
-    font-size: 1em;
-    font-weight: 500;
-    padding-left: 30px;
+  width: 100%;
+  height: 40px;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid rgb(173, 173, 173);
+  color: black;
+  font-size: 1em;
+  font-weight: 500;
+  padding-left: 30px;
 }
 
 .inputField:focus {
-    outline: none;
-    border-bottom: 2px solid rgb(62, 154, 216);
+  outline: none;
+  border-bottom: 2px solid rgb(62, 154, 216);
 }
 
 .inputField::placeholder {
-    color: rgb(80, 80, 80);
-    font-size: 1em;
-    font-weight: 500;
+  color: rgb(80, 80, 80);
+  font-size: 1em;
+  font-weight: 500;
 }
 
 /* Adjust button size and hover effect */
 #button {
-  z-index: 2;
-  width: 100%;
-  border: none;
-  background-color: rgb(53, 142, 201);
-  height: 45px;
-  color: white;
-  font-size: 1em;
-  font-weight: 500;
-  letter-spacing: 1px;
-  margin: 20px 0;
-  cursor: pointer;
-  border-radius: 5px;
-  position: relative;
-  display: flex;         /* Make button a flex container */
-  align-items: center;   /* Center content vertically */
-  justify-content: center; /* Center content horizontally */
+z-index: 2;
+width: 100%;
+border: none;
+background-color: rgb(53, 142, 201);
+height: 45px;
+color: white;
+font-size: 1em;
+font-weight: 500;
+letter-spacing: 1px;
+margin: 20px 0;
+cursor: pointer;
+border-radius: 5px;
+position: relative;
+display: flex;         /* Make button a flex container */
+align-items: center;   /* Center content vertically */
+justify-content: center; /* Center content horizontally */
 }
 
 #button:hover {
-  background-color: rgb(10, 128, 197);
+background-color: rgb(10, 128, 197);
 }
 
 .button-text {
-  transition: opacity 0.3s;
+transition: opacity 0.3s;
 }
 
 .loading-spinner {
-  display: none;
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border: 3px solid transparent;
-  border-top-color: #ffffff;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+display: none;
+position: absolute;
+width: 20px;
+height: 20px;
+border: 3px solid transparent;
+border-top-color: #ffffff;
+border-radius: 50%;
+animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+to { transform: rotate(360deg); }
 }
 
 .loading-active .button-text {
-  opacity: 0; /* Hide the text when loading */
+opacity: 0; /* Hide the text when loading */
 }
 
 .loading-active .loading-spinner {
-  display: inline-block;
+display: inline-block;
 }
 
 /* Adjust forgot link styling */
 .forgotLink {
-    z-index: 2;
-    font-size: 0.9em;
-    font-weight: 500;
-    color: rgb(44, 24, 128);
-    text-decoration: none;
-    padding: 8px 15px;
-    border-radius: 20px;
+  z-index: 2;
+  font-size: 0.9em;
+  font-weight: 500;
+  color: rgb(44, 24, 128);
+  text-decoration: none;
+  padding: 8px 15px;
+  border-radius: 20px;
 }
 
 .otpverify {
-  width: 50%;
-  display: flex;
-  position: fixed;
-  gap: 20px;
-  bottom: 150px;
-  right: 100px;
+width: 50%;
+display: flex;
+position: fixed;
+gap: 20px;
+bottom: 150px;
+right: 100px;
 }
 
 .otpverify{
-  display: none;
+display: none;
 }
 
 .btn {
-  padding: 10px;
-  background-color: rgb(53, 142, 201);
-  outline: none;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  width: 105px;
+padding: 10px;
+background-color: rgb(53, 142, 201);
+outline: none;
+border: none;
+cursor: pointer;
+border-radius: 5px;
+width: 105px;
 }
 
 /*     $apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtvaGpjcmRpcm12YW1zamNlZmV3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjczMzA2MTMsImV4cCI6MjA0MjkwNjYxM30.nuysQR2UPTch2YbRDPYWAgp14Ofi73gL72T9j6JIDM4";
- */
+*/

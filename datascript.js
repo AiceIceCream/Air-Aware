@@ -243,7 +243,6 @@ function exportToExcel(data, selectedDate) {
 
 
 ///For the Search Engine
-
 function showResultContainer() {
     const resultContainer = document.getElementById('resultContainer');
     resultContainer.style.display = 'block';
@@ -291,6 +290,9 @@ function displaySearchResults(filteredData, remarkInput, selectedDate) {
         <div id="selectedDate" style="font-weight: bold; margin-bottom: 10px;">
             Results for: ${selectedDate ? new Date(selectedDate).toLocaleDateString() : 'All Dates'}
         </div>
+        <div id="remarkHeader" style="font-weight: bold; margin-bottom: 10px; font-size: 1.2em;">
+            Remark: "${remarkInput}"
+        </div>
     `;
 
     if (filteredData.length === 0) {
@@ -298,77 +300,100 @@ function displaySearchResults(filteredData, remarkInput, selectedDate) {
         noResultsDiv.textContent = `No locations found with "${remarkInput}" remarks${selectedDate ? ` on ${new Date(selectedDate).toLocaleDateString()}` : ''}.`;
         resultContainer.appendChild(noResultsDiv);
     } else {
-        const remarkCounts = {};
+        // Create a map to store counts for each location
+        const locationRemarkCounts = {};
+        const overallCounts = { PM2_5: 0, PM10: 0, Temperature: 0, Humidity: 0, Oxygen: 0 };
 
-        // Count remarks by location name using locationNames map
+        // Populate locationRemarkCounts and overallCounts with initial values
         filteredData.forEach(item => {
             const locationName = locationNames[item.locationId] || `Unknown (${item.locationId})`;
-            remarkCounts[locationName] = (remarkCounts[locationName] || 0) + 1;
+
+            if (!locationRemarkCounts[locationName]) {
+                locationRemarkCounts[locationName] = { PM2_5: 0, PM10: 0, Temperature: 0, Humidity: 0, Oxygen: 0 };
+            }
+
+            if (item.pm25Remarks?.toLowerCase() === remarkInput.toLowerCase()) {
+                locationRemarkCounts[locationName].PM2_5++;
+                overallCounts.PM2_5++;
+            }
+            if (item.pm10Remarks?.toLowerCase() === remarkInput.toLowerCase()) {
+                locationRemarkCounts[locationName].PM10++;
+                overallCounts.PM10++;
+            }
+            if (item.temperatureRemarks?.toLowerCase() === remarkInput.toLowerCase()) {
+                locationRemarkCounts[locationName].Temperature++;
+                overallCounts.Temperature++;
+            }
+            if (item.humidityRemarks?.toLowerCase() === remarkInput.toLowerCase()) {
+                locationRemarkCounts[locationName].Humidity++;
+                overallCounts.Humidity++;
+            }
+            if (item.oxygenRemarks?.toLowerCase() === remarkInput.toLowerCase()) {
+                locationRemarkCounts[locationName].Oxygen++;
+                overallCounts.Oxygen++;
+            }
         });
 
-        // Sort locations by count in descending order
-        const sortedLocations = Object.entries(remarkCounts).sort((a, b) => b[1] - a[1]);
+        // Function to get cautionary statement based on the remark
+        function getCautionaryStatement(remark) {
+            console.log("Cautionary statement for remark:", remark);  // Debugging line
+            if (remark === "good")
+                return "Air Quality is Clean and Breathable, Ideal range for most individuals, Optimal temperature range for comfort.";
+            if (remark === "fair")
+                return "Air Quality is Breathable, Low or high humidity can lead to discomfort or exacerbate respiratory conditions for sensitive individuals.";
+            if (remark === "unhealthy")
+                return "People with respiratory disease, such as asthma, should limit outdoor exertion.";
+            if (remark === "very unhealthy")
+                return "Pedestrians should avoid heavy traffic areas. People with heart or respiratory disease such as asthma should stay indoors and rest as much as possible. Unnecessary trips should be postponed. People should voluntarily restrict the use of vehicles.";
+            if (remark === "acutely unhealthy")
+                return "Pedestrians should avoid heavy traffic areas. People with heart or respiratory disease such as asthma should stay indoors and rest as much as possible. Unnecessary trips should be postponed. Motor vehicle use may be restricted. Industrial activities may be curtailed.";
+            if (remark === "poor")
+                return "Low or high humidity can lead to discomfort or exacerbate respiratory conditions for sensitive individuals.";
+            if (remark === "emergency")
+                return "Everyone should remain indoors (keeping windows and doors closed). Motor vehicle use should be prohibited except for emergency situations. Industrial activities, except that which is vital for public safety and health, should be curtailed.";
+            else
+                return "No cautionary statement available.";
+        }
 
-        // Add each location and its remark count to the container
-        sortedLocations.forEach(([locationName, count]) => {
-            const div = document.createElement('div');
-            div.textContent = `${locationName}: ${count} ${remarkInput} remarks`;
-            resultContainer.appendChild(div);
+        // Generate the table dynamically
+        let tableHTML = `
+            <table class="results-table" style="margin-top: 20px; width: 100%; border-collapse: collapse; text-align: center;">
+                <thead>
+                    <tr>
+                        <th style="border: 1px solid #ccc; padding: 10px;">Location</th>
+                        <th style="border: 1px solid #ccc; padding: 10px;">PM2.5</th>
+                        <th style="border: 1px solid #ccc; padding: 10px;">PM10</th>
+                        <th style="border: 1px solid #ccc; padding: 10px;">Temperature</th>
+                        <th style="border: 1px solid #ccc; padding: 10px;">Humidity</th>
+                        <th style="border: 1px solid #ccc; padding: 10px;">Oxygen</th>
+                        <th style="border: 1px solid #ccc; padding: 10px;">Total Remarks</th>
+                        <th style="border: 1px solid #ccc; padding: 10px;">Cautionary Statement</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        // Populate the rows with data and total remarks count
+        Object.entries(locationRemarkCounts).forEach(([locationName, counts]) => {
+            const totalRemarks = counts.PM2_5 + counts.PM10 + counts.Temperature + counts.Humidity + counts.Oxygen;
+            const cautionaryStatement = getCautionaryStatement(remarkInput);
+
+            tableHTML += `
+                <tr>
+                    <td style="border: 1px solid #ccc; padding: 10px;">${locationName}</td>
+                    <td style="border: 1px solid #ccc; padding: 10px;">${counts.PM2_5}</td>
+                    <td style="border: 1px solid #ccc; padding: 10px;">${counts.PM10}</td>
+                    <td style="border: 1px solid #ccc; padding: 10px;">${counts.Temperature}</td>
+                    <td style="border: 1px solid #ccc; padding: 10px;">${counts.Humidity}</td>
+                    <td style="border: 1px solid #ccc; padding: 10px;">${counts.Oxygen}</td>
+                    <td style="border: 1px solid #ccc; padding: 10px;">${totalRemarks}</td>
+                    <td style="border: 1px solid #ccc; padding: 10px;">${cautionaryStatement}</td>
+                </tr>
+            `;
         });
+
+        resultContainer.innerHTML += tableHTML;
     }
-
-    // Add remarks table at the bottom
-    const remarksTable = `
-        <table class="remarks-table" style="margin-top: 20px; width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr>
-                    <th style="border: 1px solid #ccc; padding: 10px;">Remarks</th>
-                    <th style="border: 1px solid #ccc; padding: 10px;">Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td style="background-color: #14bb00; color: white; border: 1px solid #ccc; padding: 10px;">Good</td>
-                    <td style="border: 1px solid #ccc; padding: 10px;">People are okay to roam outdoors.</td>
-                </tr>
-                <tr>
-                    <td style="background-color: #f9c71d; color: white; border: 1px solid #ccc; padding: 10px;">Fair</td>
-                    <td style="border: 1px solid #ccc; padding: 10px;">People are okay to roam outdoors with caution.</td>
-                </tr>
-                <tr>
-                    <td style="background-color: #fdb114; color: white; border: 1px solid #ccc; padding: 10px;">Unhealthy</td>
-                    <td style="border: 1px solid #ccc; padding: 10px;">People with respiratory disease, such as asthma, should limit outdoor exertion.</td>
-                </tr>
-                <tr>
-                    <td style="background-color: red; color: white; border: 1px solid #ccc; padding: 10px;">Very Unhealthy</td>
-                    <td style="border: 1px solid #ccc; padding: 10px;">
-                        Pedestrians should avoid heavy traffic areas. People with heart or respiratory disease, such as asthma, 
-                        should stay indoors and rest as much as possible. Unnecessary trips should be postponed. 
-                        People should voluntarily restrict the use of vehicles.
-                    </td>
-                </tr>
-                <tr>
-                    <td style="background-color: purple; color: white; border: 1px solid #ccc; padding: 10px;">Severely Unhealthy</td>
-                    <td style="border: 1px solid #ccc; padding: 10px;">
-                        Pedestrians should avoid heavy traffic areas. People with heart or respiratory disease, such as asthma, 
-                        should stay indoors and rest as much as possible. Unnecessary trips should be postponed. 
-                        Motor vehicle use may be restricted. Industrial activities may be curtailed.
-                    </td>
-                </tr>
-                <tr>
-                    <td style="background-color: maroon; color: white; border: 1px solid #ccc; padding: 10px;">Emergency</td>
-                    <td style="border: 1px solid #ccc; padding: 10px;">
-                        Everyone should remain indoors (keeping windows and doors closed). Motor vehicle use should be 
-                        prohibited except for emergency situations. Industrial activities, except that which is vital for 
-                        public safety and health, should be curtailed.
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    `;
-
-    resultContainer.innerHTML += remarksTable;
-
     // Show the result container
     showResultContainer();
 
