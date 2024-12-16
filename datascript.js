@@ -338,9 +338,9 @@ function displaySearchResults(filteredData, remarkInput, selectedDate) {
         function getCautionaryStatement(remark) {
             console.log("Cautionary statement for remark:", remark);  // Debugging line
             if (remark === "good")
-                return "Air Quality is Clean and Breathable, Ideal range for most individuals, Optimal temperature range for comfort.";
+                return "Safe air levels, Humidity is in Comfortable range, Safe temperature levels, Safe oxygen levels; no action needed.";
             if (remark === "fair")
-                return "Air Quality is Breathable, Low or high humidity can lead to discomfort or exacerbate respiratory conditions for sensitive individuals.";
+                return "Some pollutants may be a concern for sensitive individuals, Dry or Humid conditions monitor hydration levels and consider humidification, Sligt Discomfort and may feel sticky.";
             if (remark === "unhealthy")
                 return "People with respiratory disease, such as asthma, should limit outdoor exertion.";
             if (remark === "very unhealthy")
@@ -348,9 +348,15 @@ function displaySearchResults(filteredData, remarkInput, selectedDate) {
             if (remark === "acutely unhealthy")
                 return "Pedestrians should avoid heavy traffic areas. People with heart or respiratory disease such as asthma should stay indoors and rest as much as possible. Unnecessary trips should be postponed. Motor vehicle use may be restricted. Industrial activities may be curtailed.";
             if (remark === "poor")
-                return "Low or high humidity can lead to discomfort or exacerbate respiratory conditions for sensitive individuals.";
+                return "Excessively dry; potential for skin irritation and dehydration. Use humidifiers or Excessively humid; risk of mold growth and discomfort. Use dehumidifiers.";
             if (remark === "emergency")
                 return "Everyone should remain indoors (keeping windows and doors closed). Motor vehicle use should be prohibited except for emergency situations. Industrial activities, except that which is vital for public safety and health, should be curtailed.";
+            if (remark === "danger ")
+                return "Avoid outdoor activities; risk of heat-related illnesses."
+            if (remark === "extreme")
+                return "Severe risk: Stay indoors; heatstroke possible."
+            if (remark === "low")
+                return "Risk of hypoxia; ensure oxygen supply and ventilation."
             else
                 return "No cautionary statement available.";
         }
