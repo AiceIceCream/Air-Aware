@@ -9,10 +9,39 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Pre:wght@400..700&display=swap" rel="stylesheet">
+    <style>
+        .remarks-tables-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .remarks-table {
+            width: 4000px;
+            border-collapse: collapse;
+            font-family: 'Courier New', Courier, monospace;
+            margin-bottom: 10px;
+            margin-top: 30px;
+        }
+        .remarks-table th{
+            text-align: center;
+            border: 1px solid #0c0505;
+            padding: 10px;
+        }
+        .remarks-table td {
+            border: 1px solid #0c0505;
+            text-align: justify;
+            padding: 8px;
+        }
+        .remarks-table th {
+            background-color: lightblue;
+            color: black;
+        }
+    </style>
 </head>
 <body>
     <header class="container">
-        <h1><img src="./media/Logo1.png" alt="Logo" style="width: 36px;"> Air Aware</h1>
+        <h1><img src="./media/Logo1.png" alt="Logo" style="width: 36px;">ir Aware</h1>
         <nav style="font-family: 'Courier New', Courier, monospace;">
             <a href="index.html">Home</a>
             <a href="about.html" style="color: #fff;">About Us</a>
@@ -52,58 +81,214 @@
 
     <div class="divider-line"></div>
 
-<!-- Remarks -->
+<!--////////////////////////////////// Remarks //////////////////////////////////////////// -->
 
 <div class="container">
-    <h2 style="font-family: 'Courier New', Courier, monospace;">Air Quality Remarks</h2>
-    <table class="remarks-table">
-        <thead>
-            <tr>
-                <th>Remarks</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr style="color: black;">
-                <td style="background-color: #14bb00; color: white;">Good</td>
-                <td>People are okay to roam outdoors.</td>
-            </tr>
-            <tr style="color: black;">
-                <td style="background-color: #f9c71d; color: white;">Fair</td>
-                <td>People are okay to roam outdoors with caution.</td>
-            </tr>
-            <tr style="color: black;">
-                <td style="background-color: #fdb114; color: white;">Unhealthy</td>
-                <td>People with respiratory disease, such as asthma, should limit outdoor exertion.</td>
-            </tr>
-            <tr style="color: black;">
-                <td style="background-color: red; color: white;">Very Unhealthy</td>
-                <td>
-                    Pedestrians should avoid heavy traffic areas. People with heart or respiratory disease, such as asthma, 
-                    should stay indoors and rest as much as possible. Unnecessary trips should be postponed. 
-                    People should voluntarily restrict the use of vehicles.
-                </td>
-            </tr>
-            <tr style="color: black;">
-                <td style="background-color: purple; color: white;">Severely Unhealthy</td>
-                <td>
-                    Pedestrians should avoid heavy traffic areas. People with heart or respiratory disease, such as asthma, 
-                    should stay indoors and rest as much as possible. Unnecessary trips should be postponed. 
-                    Motor vehicle use may be restricted. Industrial activities may be curtailed.
-                </td>
-            </tr>
-            <tr style="color: black;">
-                <td style="background-color: maroon; color: white;">Emergency</td>
-                <td>
-                    Everyone should remain indoors (keeping windows and doors closed). Motor vehicle use should be 
-                    prohibited except for emergency situations. Industrial activities, except that which is vital for 
-                    public safety and health, should be curtailed.
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <h4 style="font-family: 'Courier New', Courier, monospace; color: black; text-align: center;">Department of Environment and Natural Resources</h1>
+    <h2 style="font-family: 'Courier New', Courier, monospace; text-align: center;">Air Quality Remarks</h2>
+    <div class="remarks-tables-container">
+        <!-- Humidity Table -->
+                <!-- PM2.5 Table -->
+                <table class="remarks-table">
+                    <thead>
+                        <tr>
+                            <th colspan="3">PM2.5(µg/m³)</th>
+                        </tr>
+                        <tr>
+                            <th>Remarks</th>
+                            <th>AQI</th>
+                            <th>Cautionary Statement</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="background-color: #14bb00; color: black;">Good</td>
+                            <td>0-25</td>
+                            <td>Safe air levels; no action needed.</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #e9cf00; color: black;">Fair</td>
+                            <td>26-35</td>
+                            <td>Some pollutants may be a concern for sensitive individuals.</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #e07a00; color: black;">Unhealthy</td>
+                            <td>36-45</td>
+                            <td>People with respiratory disease, such as asthma, should limit outdoor exertion.</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: red; color: black;">Very Unhealthy</td>
+                            <td>46-55</td>
+                            <td>Pedestrians should avoid heavy traffic areas. People with heart or respiratory disease such as asthma should stay indoors and rest as much as possible. Unnecessary trips should be postponed. People should voluntarily restrict the use of vehicles.</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: purple; color: black;">Acutely Unhealthy</td>
+                            <td>56-90</td>
+                            <td>Pedestrians should avoid heavy traffic areas. People with heart or respiratory disease such as asthma should stay indoors and rest as much as possible. Unnecessary trips should be postponed. Motor vehicle use may be restricted. Industrial activities may be curtailed.</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #8B0000; color: black;">Emergency</td>
+                            <td>Above 90</td>
+                            <td>Everyone should remain indoors (keeping windows and doors closed). Motor vehicle use should be prohibited except for emergency situations. Industrial activities, except that which is vital for public safety and health, should be curtailed.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-family: 'Courier New', Courier, monospace; text-align: center;">Source: Department of Environment and Natural Resources(DENR)</p>
+        
+                <!-- PM10 Table -->
+                <table class="remarks-table">
+                    <thead>
+                        <tr>
+                            <th colspan="3">PM10(µg/m³)</th>
+                        </tr>
+                        <tr>
+                            <th>Remarks</th>
+                            <th>AQI</th>
+                            <th>Cautionary Statement</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="background-color: #14bb00; color: black;">Good</td>
+                            <td>0-54</td>
+                            <td>Safe air levels; no action needed.</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #e9cf00; color: black;">Fair</td>
+                            <td>55-154</td>
+                            <td>Some pollutants may be a concern for sensitive individuals.</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #e07a00; color: black;">Unhealthy</td>
+                            <td>155-254</td>
+                            <td>People with respiratory disease, such as asthma, should limit outdoor exertion.</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: red; color: black;">Very Unhealthy</td>
+                            <td>255-354</td>
+                            <td>Pedestrians should avoid heavy traffic areas. People with heart or respiratory disease such as asthma should stay indoors and rest as much as possible. Unnecessary trips should be postponed. People should voluntarily restrict the use of vehicles.</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: purple; color: black;">Acutely Unhealthy</td>
+                            <td>355-424</td>
+                            <td>Pedestrians should avoid heavy traffic areas. People with heart or respiratory disease such as asthma should stay indoors and rest as much as possible. Unnecessary trips should be postponed. Motor vehicle use may be restricted. Industrial activities may be curtailed.</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #8B0000; color: black;">Emergency</td>
+                            <td>Above 424</td>
+                            <td>Everyone should remain indoors (keeping windows and doors closed). Motor vehicle use should be prohibited except for emergency situations. Industrial activities, except that which is vital for public safety and health, should be curtailed.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-family: 'Courier New', Courier, monospace; text-align: center;">Source: Department of Environment and Natural Resources(DENR)</p>
+
+        <table class="remarks-table">
+            <thead>
+                <tr>
+                    <th colspan="3">Humidity(%)</th>
+                </tr>
+                <tr>
+                    <th>Remarks</th>
+                    <th>AQI</th>
+                    <th>Cautionary Statement</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="background-color: red; color: black;">Poor</td>
+                    <td>0-25</td>
+                    <td>Excessively dry; potential for skin irritation and dehydration. Use humidifiers.</td>
+                </tr>
+                <tr>
+                    <td style="background-color: #e9cf00; color: black;">Fair</td>
+                    <td>26-30</td>
+                    <td>Dry conditions; monitor hydration levels and consider humidification.</td>
+                </tr>
+                <tr>
+                    <td style="background-color: #14bb00; color: black;">Good</td>
+                    <td>31-60</td>
+                    <td>Comfortable range; no action needed.</td>
+                </tr>
+                <tr>
+                    <td style="background-color: #e9cf00; color: black;">Fair</td>
+                    <td>61-70</td>
+                    <td>Slight discomfort; may feel sticky. Ventilation recommended.</td>
+                </tr>
+                <tr>
+                    <td style="background-color: red; color: black;">Poor</td>
+                    <td>Above 70</td>
+                    <td>Excessively humid; risk of mold growth and discomfort. Use dehumidifiers.</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="font-family: 'Courier New', Courier, monospace; text-align: center;">Source: World Health Organization & ASHRAE</p>
+
+        <!-- Temperature Table -->
+        <table class="remarks-table">
+            <thead>
+                <tr>
+                    <th colspan="3">Temperature(℃)</th>
+                </tr>
+                <tr>
+                    <th>Remarks</th>
+                    <th>AQI</th>
+                    <th>Cautionary Statement</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="background-color: #14bb00; color: black;">Good</td>
+                    <td>0-33</td>
+                    <td>Safe temperature levels; no action needed.</td>
+                </tr>
+                <tr>
+                    <td style="background-color: #f9c71d; color: black;">Caution</td>
+                    <td>34-41</td>
+                    <td>Reduce prolonged exposure and stay hydrated.</td>
+                </tr>
+                <tr>
+                    <td style="background-color: #fdb114; color: black;">Danger</td>
+                    <td>42-54</td>
+                    <td>Avoid outdoor activities; risk of heat-related illnesses.</td>
+                </tr>
+                <tr>
+                    <td style="background-color: red; color: black;">Extreme</td>
+                    <td>Above 54</td>
+                    <td>Severe risk: Stay indoors; heatstroke possible.</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="font-family: 'Courier New', Courier, monospace; text-align: center;">Source: World Health Organization & ASHRAE</p>
+
+        <!-- Oxygen Table -->
+        <table class="remarks-table">
+            <thead>
+                <tr>
+                    <th colspan="3">Oxygen(%)</th>
+                </tr>
+                <tr>
+                    <th>Remarks</th>
+                    <th>AQI</th>
+                    <th>Cautionary Statement</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="background-color: red; color: black;">Low</td>
+                    <td>0-19.4</td>
+                    <td>Risk of hypoxia; ensure oxygen supply and ventilation.</td>
+                </tr>
+                <tr>
+                    <td style="background-color: #14bb00; color: black;">Good</td>
+                    <td>Above 19.5</td>
+                    <td>Safe oxygen levels; no action needed.</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="font-family: 'Courier New', Courier, monospace; text-align: center;">Source: World Health Organization & ASHRAE</p>
+    </div>
 </div>
+
+<!-- //////////////////////////Diri ra taman ang Table sa Remarks////////////////////////////// -->
 
 <div class="divider-line"></div>
 
