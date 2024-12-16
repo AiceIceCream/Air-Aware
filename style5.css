@@ -510,10 +510,3 @@ color: #878787;
   background-color: white;
   margin: 50px 0;
 }
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  overflow-x: auto;
-  display: block;
-}
