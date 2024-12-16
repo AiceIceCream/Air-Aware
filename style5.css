@@ -235,9 +235,9 @@ header nav a:hover {
 
   @media (max-width: 1024px) {
     header {
-      flex-direction: row;
-      text-align: center;
-  }
+      padding: 20px 0;
+      font-size: 20px;
+    }
 
   header nav a {
       display: block;
@@ -259,15 +259,15 @@ header nav a:hover {
 }
 
 @media (max-width: 768px) {
-    header {
-        flex-direction: row;
-        text-align: center;
-    }
+  header {
+    flex-direction: column;
+    text-align: center;
+  }
 
-    header nav a {
-        display: block;
-        margin: 5px 0;
-    }
+  header nav{
+    height: 100px;
+}
+
 
     .about-container, .team-section {
         flex-direction: column;
@@ -509,4 +509,11 @@ color: #878787;
   height: 1px;
   background-color: white;
   margin: 50px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow-x: auto;
+  display: block;
 }
