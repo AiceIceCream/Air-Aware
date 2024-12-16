@@ -234,6 +234,15 @@ header nav a:hover {
   }
 
   @media (max-width: 1024px) {
+    header {
+      flex-direction: row;
+      text-align: center;
+  }
+
+  header nav a {
+      display: block;
+      margin: 5px 0;
+  }
     .about-container {
         flex-direction: column;
         text-align: center;
@@ -249,9 +258,9 @@ header nav a:hover {
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     header {
-        flex-direction: column;
+        flex-direction: row;
         text-align: center;
     }
 
