@@ -216,6 +216,23 @@ function exportToExcel(data, selectedDate) {
         // Add location header
         worksheetData.push([`Location: ${locationId}`]);
 
+        // Add table header
+        worksheetData.push([
+            "id",
+            "date",
+            "locationId",
+            "pm25",
+            "pm25Remarks",
+            "pm10",
+            "pm10Remarks",
+            "humidity",
+            "humidityRemarks",
+            "temperature",
+            "temperatureRemarks",
+            "oxygen",
+            "oxygenRemarks",
+        ]);
+
         // Add data rows
         locationData.forEach(item => {
             worksheetData.push([
