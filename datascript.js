@@ -151,10 +151,6 @@ function formatTimestamp(timestamp) {
     return date.toLocaleString();
 }
 
-
-
-
-
 function exportToExcel(data, selectedDate) {
     const selectedDateObj = selectedDate ? new Date(selectedDate) : new Date();
     selectedDateObj.setHours(0, 0, 0, 0);
@@ -170,6 +166,15 @@ function exportToExcel(data, selectedDate) {
         return;
     }
 
+    // Group data by locationId
+    const groupedData = filteredData.reduce((groups, item) => {
+        if (!groups[item.locationId]) {
+            groups[item.locationId] = [];
+        }
+        groups[item.locationId].push(item);
+        return groups;
+    }, {});
+
     const calculatePollutantOverallRemark = (data, pollutantKey) => {
         const remarkCounts = {};
 
@@ -180,60 +185,84 @@ function exportToExcel(data, selectedDate) {
             }
         });
 
-        // Get the most frequent remark
         return Object.keys(remarkCounts).reduce((a, b) =>
             remarkCounts[a] > remarkCounts[b] ? a : b, "Unknown"
         );
     };
 
-    const pm25OverallRemark = calculatePollutantOverallRemark(filteredData, "pm25");
-    const pm10OverallRemark = calculatePollutantOverallRemark(filteredData, "pm10");
-    const humidityOverallRemark = calculatePollutantOverallRemark(filteredData, "humidity");
-    const temperatureOverallRemark = calculatePollutantOverallRemark(filteredData, "temperature");
-    const oxygenOverallRemark = calculatePollutantOverallRemark(filteredData, "oxygen");
+    const calculateAverage = (data, key) => {
+        const validValues = data.map(item => item[key]).filter(value => value != null);
+        const sum = validValues.reduce((acc, value) => acc + value, 0);
+        return validValues.length > 0 ? (sum / validValues.length).toFixed(2) : "N/A";
+    };
 
-    const excelData = filteredData.map(item => ({
-        id: item.id,
-        date: new Date(item.date).toLocaleString(),
-        locationId: item.locationId,
-        pm25: item.pm25,
-        pm25Remarks: item.pm25Remarks,
-        pm10: item.pm10,
-        pm10Remarks: item.pm10Remarks,
-        humidity: item.humidity,
-        humidityRemarks: item.humidityRemarks,
-        temperature: item.temperature,
-        temperatureRemarks: item.temperatureRemarks,
-        oxygen: item.oxygen,
-        oxygenRemarks: item.oxygenRemarks,
-    }));
+    const worksheetData = [];
 
-    const worksheet = XLSX.utils.json_to_sheet(excelData, {
-        header: [
-            "id",
-            "date",
-            "locationId",
-            "pm25",
-            "pm25Remarks",
-            "pm10",
-            "pm10Remarks",
-            "humidity",
-            "humidityRemarks",
-            "temperature",
-            "temperatureRemarks",
-            "oxygen",
-            "oxygenRemarks",
-        ],
+    Object.keys(groupedData).forEach(locationId => {
+        const locationData = groupedData[locationId];
+
+        const pm25Average = calculateAverage(locationData, "pm25");
+        const pm10Average = calculateAverage(locationData, "pm10");
+        const humidityAverage = calculateAverage(locationData, "humidity");
+        const temperatureAverage = calculateAverage(locationData, "temperature");
+        const oxygenAverage = calculateAverage(locationData, "oxygen");
+
+        const pm25OverallRemark = calculatePollutantOverallRemark(locationData, "pm25");
+        const pm10OverallRemark = calculatePollutantOverallRemark(locationData, "pm10");
+        const humidityOverallRemark = calculatePollutantOverallRemark(locationData, "humidity");
+        const temperatureOverallRemark = calculatePollutantOverallRemark(locationData, "temperature");
+        const oxygenOverallRemark = calculatePollutantOverallRemark(locationData, "oxygen");
+
+        // Add location header
+        worksheetData.push([`Location: ${locationId}`]);
+
+        // Add data rows
+        locationData.forEach(item => {
+            worksheetData.push([
+                item.id,
+                new Date(item.date).toLocaleString(),
+                item.locationId,
+                item.pm25,
+                item.pm25Remarks,
+                item.pm10,
+                item.pm10Remarks,
+                item.humidity,
+                item.humidityRemarks,
+                item.temperature,
+                item.temperatureRemarks,
+                item.oxygen,
+                item.oxygenRemarks,
+            ]);
+        });
+
+        // Add overall remarks
+        worksheetData.push(
+            ["Overall Remarks"],
+            ["PM2.5", pm25OverallRemark],
+            ["PM10", pm10OverallRemark],
+            ["Humidity", humidityOverallRemark],
+            ["Temperature", temperatureOverallRemark],
+            ["Oxygen", oxygenOverallRemark],
+            []
+        );
+
+        // Add averages
+        worksheetData.push(
+            ["Averages"],
+            ["PM2.5", pm25Average],
+            ["PM10", pm10Average],
+            ["Humidity", humidityAverage],
+            ["Temperature", temperatureAverage],
+            ["Oxygen", oxygenAverage],
+            []
+        );
+
+        // Add a blank row for spacing
+        worksheetData.push([]);
     });
 
-    XLSX.utils.sheet_add_aoa(worksheet, [
-        ["Overall Remarks"],
-        ["PM2.5", pm25OverallRemark],
-        ["PM10", pm10OverallRemark],
-        ["Humidity", humidityOverallRemark],
-        ["Temperature", temperatureOverallRemark],
-        ["Oxygen", oxygenOverallRemark],
-    ], { origin: `Q1` });
+    // Convert worksheetData to worksheet
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
 
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Particulate Matter Data');
