@@ -197,6 +197,7 @@ function exportToExcel(data, selectedDate) {
     };
 
     const worksheetData = [];
+    
 
     Object.keys(groupedData).forEach(locationId => {
         const locationData = groupedData[locationId];
